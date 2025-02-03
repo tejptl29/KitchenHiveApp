@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "741702286163",
+    "project_id": "kitchenhive-8af39",
+    "storage_bucket": "kitchenhive-8af39.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741702286163:android:281508e6666aacc6803fa6",
+        "android_client_info": {
+          "package_name": "com.example.kitchenhive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDetWzToEg6wf_PqC3c5pkybnmaI2oGYqk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".Verifyotp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/con1"
+            android:padding="10dp">
+
+            <ImageView
+                android:src="@drawable/otpimg"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/otpimg"
+                android:layout_width="350dp"
+                android:layout_height="250dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/otptxt"
+                app:layout_constraintTop_toBottomOf="@+id/otpimg"
+                android:text="Enter Your OTP Code "
+                android:textAlignment="center"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_marginTop="40dp"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/txtdigit"
+                app:layout_constraintTop_toBottomOf="@+id/otptxt"
+                android:text="A 4-digit code has been send to "
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/otp"
+                app:layout_constraintTop_toBottomOf="@+id/txtdigit"
+                android:text="8745329982"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
+            <com.chaos.view.PinView
+                android:id="@+id/otpcode"
+                style="@style/PinWidget.PinView"
+                app:layout_constraintTop_toBottomOf="@+id/otp"
+                android:layout_marginTop="30dp"
+                app:itemCount="6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:itemHeight="50dp"
+                android:inputType="number"
+                android:elevation="10dp"
+                app:itemRadius="10dp"
+                app:itemSpacing="10dp"
+                app:itemWidth="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp">
+
+            </com.chaos.view.PinView>
+
+            <TextView
+                android:id="@+id/receiveotptxt"
+                app:layout_constraintTop_toBottomOf="@+id/otpcode"
+                android:text="Don't receive the OTP?"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:layout_marginStart="25dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/txtresend"
+                android:layout_marginTop="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/txtresend"
+                android:layout_marginTop="40dp"
+                android:text="RESEND OTP"
+                android:textColor="@color/black"
+                android:textSize="10sp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/receiveotptxt"
+                app:layout_constraintTop_toBottomOf="@+id/otpcode"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+            <Button
+                android:id="@+id/btnsendotp"
+                app:layout_constraintTop_toBottomOf="@+id/receiveotptxt"
+                android:layout_width="350dp"
+                android:text="Verify OTP"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="60dp"
+                android:background="@drawable/btn_qty"
+                android:elevation="10dp"
+                android:layout_height="50dp"/>
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
