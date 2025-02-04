@@ -21,6 +21,20 @@
             android:textSize="30sp"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/no_rec_found_cart"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_cart"
+            android:layout_marginTop="30dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="No Records Found"
+            android:textSize="20sp"
+            android:padding="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cart_items_recycle"
             android:layout_width="match_parent"

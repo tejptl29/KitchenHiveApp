@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/con2"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
+        android:layout_height="200dp"
         android:background="@drawable/btn_qty"
         android:clipToOutline="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,8 +19,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/con_img"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:layout_marginStart="10dp"
             android:background="@drawable/btn_qty"
             android:elevation="10dp"
@@ -72,12 +72,12 @@
             android:id="@+id/pro_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="39dp"
             android:text="PIZZA"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/con_img"
-            app:layout_constraintTop_toBottomOf="@+id/pro_veg_non" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/pro_veg_non"/>
 
         <TextView
             android:id="@+id/pro_amt"
@@ -88,7 +88,7 @@
             android:text="\u20B9"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/con_img"
-            app:layout_constraintTop_toBottomOf="@+id/pro_name" />
+            app:layout_constraintTop_toBottomOf="@+id/pro_veg_non" />
 
         <TextView
             android:id="@+id/pro_qty"
@@ -124,18 +124,18 @@
 <!--            app:layout_constraintBottom_toBottomOf="parent"-->
 <!--            app:layout_constraintEnd_toEndOf="parent"/>-->
 
-        <Button
+        <ImageView
             android:id="@+id/btn_remove_cart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="REMOVE"
+            android:src="@drawable/baseline_delete_24"
             android:gravity="center"
             android:layout_marginEnd="15dp"
             android:padding="0dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/btn_qty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="30dp"
+            android:layout_height="40dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

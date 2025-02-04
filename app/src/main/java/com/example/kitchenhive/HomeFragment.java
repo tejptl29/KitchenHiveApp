@@ -171,6 +171,8 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
             }
         });
 
+       ((MainActivity) mainActivity).bind_cart_bottom(false, mainActivity);
+
         return view;
     }
 

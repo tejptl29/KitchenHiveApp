@@ -64,10 +64,18 @@ public class MainActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new HomeFragment(MainActivity.this));
-        binding.bottomnavview.setSelectedItemId(R.id.home);
 
-        //call_dashboard_api();
+        Intent intent = getIntent();
+        String to_cart = intent.getStringExtra("to_cart");
+
+
+        if(to_cart != null && to_cart.equals("1")) {
+            replaceFragment(new CartFragment(MainActivity.this));
+        }
+        else{
+            replaceFragment(new HomeFragment(MainActivity.this));
+        }
+        binding.bottomnavview.setSelectedItemId(R.id.home);
 
         binding.bottomnavview.setOnItemSelectedListener(item -> {
             if(item.getItemId() == R.id.home){
@@ -84,6 +92,26 @@ public class MainActivity extends BaseActivity{
             }
             return true;
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //bind_cart_bottom(false);
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.main_frag);
+
+        if (currentFragment != null) {
+            String fragmentName = currentFragment.getClass().getSimpleName();
+            if(fragmentName.equals("CatalogFragment")){
+                bind_cart_bottom(true, MainActivity.this);
+            }
+            else{
+                bind_cart_bottom(false, MainActivity.this);
+            }
+            System.out.println(("MainActivity"+ "Current Fragment: " + fragmentName));
+        } else {
+
+        }
     }
 
     public void prominentDialog(){
@@ -545,7 +573,8 @@ class cartAdapter extends RecyclerView.Adapter<cartViewHolder> {
                 public void onClick(View view) {
                     CartManager cartManager = new CartManager(activity);
                     cartManager.removeItem(item.getProductId());
-                    ((MainActivity) activity).cartAdapter.notifyDataSetChanged();
+                    CartFragment fragobj = new CartFragment(activity);
+                    ((MainActivity)activity).replaceFragment(fragobj);
                 }
             });
 
@@ -559,7 +588,7 @@ class cartViewHolder extends RecyclerView.ViewHolder {
 
     TextView txt_product,txt_amount,txt_finall_amt,txt_qty;
     ImageView pro_image,txt_veg_non;
-    Button btn_remove;
+    ImageView btn_remove;
     ConstraintLayout constraintLayout;
 
 

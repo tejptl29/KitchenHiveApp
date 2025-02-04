@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,7 +41,7 @@ public class CartFragment extends Fragment {
     }
 
 
-
+    TextView cart_record_no_found;
     View view;
     /**
      * Use this factory method to create a new instance of
@@ -75,17 +76,28 @@ public class CartFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_cart, container, false);
+        cart_record_no_found = view.findViewById(R.id.no_rec_found_cart);
+        bind_cart_recyclerview();
+        ((MainActivity) mainActivity).bind_cart_bottom(false, mainActivity);
+        return view;
+    }
 
+    public void bind_cart_recyclerview(){
         CartManager cartManager = new CartManager(mainActivity);
         ((MainActivity) mainActivity).jsonObjectscart.clear();
         ((MainActivity) mainActivity).jsonObjectscart = cartManager.getCart();
+
+        if(((MainActivity) mainActivity).jsonObjectscart.size() > 0){
+            cart_record_no_found.setVisibility(View.GONE);
+        }
+        else{
+            cart_record_no_found.setVisibility(View.VISIBLE);
+        }
 
         ((MainActivity) mainActivity).cartrecyclerView = view.findViewById(R.id.cart_items_recycle);
         ((MainActivity) mainActivity).cartrecyclerView.setLayoutManager(new LinearLayoutManager(mainActivity, RecyclerView.VERTICAL, false));
         ((MainActivity) mainActivity).cartAdapter = new cartAdapter(((MainActivity) mainActivity), ((MainActivity) mainActivity).jsonObjectscart);
         ((MainActivity) mainActivity).cartrecyclerView.setItemAnimator(new DefaultItemAnimator());
         ((MainActivity) mainActivity).cartrecyclerView.setAdapter(((MainActivity) mainActivity).cartAdapter);
-
-        return view;
     }
 }

@@ -85,6 +85,8 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        ((MainActivity) mainActivity).bind_cart_bottom(false, mainActivity);
+
        return view;
     }
 }

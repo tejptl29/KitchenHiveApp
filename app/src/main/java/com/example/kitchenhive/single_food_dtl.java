@@ -117,6 +117,8 @@ public class single_food_dtl extends BaseActivity {
                 messageToast("ERROR", message);
             }
         });
+
+        bind_cart_bottom(true, single_food_dtl.this);
     }
     //quantity increase decrease function
     public int change_qty(String type, TextView txt_qty, Button btn_add, ConstraintLayout layout){
@@ -214,6 +216,8 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
+
+                    ((single_food_dtl) activity).bind_cart_bottom(true, activity);
                 }
             });
 
@@ -238,6 +242,8 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
+
+                    ((single_food_dtl) activity).bind_cart_bottom(true, activity);
                 }
             });
 
@@ -268,6 +274,8 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
+
+                    ((single_food_dtl) activity).bind_cart_bottom(true, activity);
                 }
             });
 
