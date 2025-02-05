@@ -3,7 +3,7 @@ package com.example.kitchenhive;
 import java.io.Serializable;
 
 public class CartItem implements Serializable {
-    private String productId;
+    private String productId, storeId;
     private String productName;
     private double price;
     private int quantity;
@@ -11,8 +11,9 @@ public class CartItem implements Serializable {
     private double total;
     private String veg;
 
-    public CartItem(String productId, String productName, double price, int quantity, String image, double total, String veg) {
+    public CartItem(String productId, String storeId, String productName, double price, int quantity, String image, double total, String veg) {
         this.productId = productId;
+        this.storeId = storeId;
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
@@ -24,6 +25,9 @@ public class CartItem implements Serializable {
     // Getters and Setters
     public String getProductId() { return productId; }
     public void setProductId(String productId) { this.productId = productId; }
+
+    public String getStoreId() { return storeId; }
+    public void setStoreId(String storeId) { this.storeId = storeId; }
 
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }

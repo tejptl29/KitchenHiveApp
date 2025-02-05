@@ -644,7 +644,7 @@ class APIClass {
         });
     }
 
-    void set_order(String user_id, String email, String order_number,String description , String amount, String address){
+    void set_order(String user_id, String phone, String email, String order_number,String description , String amount, String items){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -655,7 +655,7 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.set_order(user_id,email,order_number,description,amount,address);
+        Call<ResponseBody> apiCall = api.set_order(user_id,phone,email,order_number,description,amount,items);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

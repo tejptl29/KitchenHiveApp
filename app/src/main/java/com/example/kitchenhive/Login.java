@@ -93,9 +93,9 @@ public class Login extends BaseActivity {
                                             sharedPreferences.edit().putString("UserName", json.getString("name")).apply();
                                         }
 
-//                                    if(new Utility().checkJSONDataNotNull(json, "phone")){
-//                                        sharedPreferences.edit().putString("UserPhone",json.getString("phone")).apply();
-//                                    }
+                                        if(new Utility().checkJSONDataNotNull(json, "phone")){
+                                            sharedPreferences.edit().putString("UserPhone",json.getString("phone")).apply();
+                                        }
 
                                         if (new Utility().checkJSONDataNotNull(json, "email")) {
                                             sharedPreferences.edit().putString("UserEmail", json.getString("email")).apply();

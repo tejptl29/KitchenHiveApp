@@ -41,7 +41,6 @@ public class CartManager {
         cartItems.add(item);
         saveCart(cartItems);
     }
-
     // Remove item from cart by product ID
     public void removeItem(String productId) {
         List<CartItem> cartItems = getCart();
@@ -62,28 +61,14 @@ public class CartManager {
         return 0;
     }
 
-    // Remove item from cart by product ID
-    public void setItemQuantity(String productId, int qty){
+    public double getCartTotal() {
         List<CartItem> cartItems = getCart();
+        double total = 0;
         for (int i = 0; i < cartItems.size(); i++) {
             CartItem item = cartItems.get(i);
-            if(item.getProductId().equals(productId)){
-                item.setQuantity(qty);
-            }
+            total += item.getTotal();
         }
-        saveCart(cartItems);
-    }
-
-    // Remove item from cart by product ID
-    public boolean product_exist(String productId){
-        List<CartItem> cartItems = getCart();
-        for (int i = 0; i < cartItems.size(); i++) {
-            CartItem item = cartItems.get(i);
-            if(item.getProductId().equals(productId)){
-                return true;
-            }
-        }
-        return false;
+        return total;
     }
 
     // Clear cart

@@ -124,18 +124,33 @@
 <!--            app:layout_constraintBottom_toBottomOf="parent"-->
 <!--            app:layout_constraintEnd_toEndOf="parent"/>-->
 
+
+        <ImageView
+            android:id="@+id/btn_add_cart"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/baseline_add_shopping_cart_24"
+            android:gravity="center"
+            android:layout_marginEnd="42dp"
+            android:padding="0dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/btn_qty"
+            android:layout_width="25dp"
+            android:layout_height="35dp"/>
+
         <ImageView
             android:id="@+id/btn_remove_cart"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_add_cart"
             android:src="@drawable/baseline_delete_24"
             android:gravity="center"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="15dp"
             android:padding="0dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/btn_qty"
-            android:layout_width="30dp"
-            android:layout_height="40dp"/>
+            android:layout_width="25dp"
+            android:layout_height="35dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

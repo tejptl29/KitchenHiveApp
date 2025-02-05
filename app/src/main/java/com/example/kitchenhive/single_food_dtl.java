@@ -160,6 +160,7 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
     public void onBindViewHolder(final storeproViewHolder holder, final int position) {
         try {
             JSONObject empObject = new JSONObject(storepro.get(position).toString());
+            System.out.println(empObject);
             holder.txt_food_name.setText(empObject.getString("fname"));
             holder.txt_price.setText("\u20B9 "+empObject.getString("fprice"));
             holder.txt_desc.setText(empObject.getString("fdescription"));
@@ -210,7 +211,7 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
                     try {
 
                         double total = Double.valueOf(empObject.getString("fprice")) * 1;
-                        CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), 1, empObject.getString("image_url"), total, empObject.getString("ftype"));
+                        CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), 1, empObject.getString("image_url"), total, empObject.getString("ftype"));
                         cartManager.addItem(newItem);
 
                     } catch (JSONException e) {
@@ -231,7 +232,7 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
                         if(qty > 0) {
                             cartManager.removeItem(empObject.getString("id"));
                             double total = Double.valueOf(empObject.getString("fprice")) * qty;
-                            CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
+                            CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
                             cartManager.addItem(newItem);
                         }
                         else{
@@ -256,7 +257,7 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
                         if(qty > 0) {
                             cartManager.removeItem(empObject.getString("id"));
                             double total = Double.valueOf(empObject.getString("fprice")) * qty;
-                            CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
+                            CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
                             cartManager.addItem(newItem);
                             /*if(cartManager.product_exist(empObject.getString("id"))){
                                 cartManager.setItemQuantity(empObject.getString("id"), qty);

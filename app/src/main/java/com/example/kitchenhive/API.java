@@ -68,7 +68,7 @@ public interface API {
 
     @POST("api/set_order/")
     @FormUrlEncoded
-    Call<ResponseBody> set_order(@Field("user_id") String user_id, @Field("email") String email, @Field("order_number") String order_number, @Field("description") String description, @Field("amount") String amount ,@Field("address") String address );
+    Call<ResponseBody> set_order(@Field("user_id") String user_id,@Field("phone") String phone, @Field("email") String email, @Field("order_number") String order_number, @Field("description") String description, @Field("amount") String amount, @Field("items") String items);
 
     @POST("api/get_user_subscriptions/")
     @FormUrlEncoded
