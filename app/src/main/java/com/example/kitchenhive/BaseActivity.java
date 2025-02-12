@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +27,8 @@ public class BaseActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     TextView errorBlock;
     Handler handler = new Handler();
+    ConstraintLayout cart_bottom_layout;
+    Button btn_view_cart;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,6 +112,45 @@ public class BaseActivity extends AppCompatActivity {
 //                    }
 //                });
 //    }
+
+    public void bind_cart_bottom(boolean show, Activity activity){
+        cart_bottom_layout = findViewById(R.id.cart_bottom_layout);
+        btn_view_cart = findViewById(R.id.btn_view_cart);
+
+        btn_view_cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(activity instanceof MainActivity){
+                    ((MainActivity) activity).replaceFragment(new CartFragment(activity));
+                }
+                else{
+                    Intent intent = new Intent(activity, MainActivity.class);
+                    intent.putExtra("to_cart", "1");
+                    startActivity(intent);
+                }
+            }
+        });
+
+        if(show){
+            cart_bottom_layout.setVisibility(View.VISIBLE);
+            CartManager cartManager = new CartManager(BaseActivity.this);
+            int total_items = cartManager.getCart().size();
+            if(total_items > 0){
+
+                btn_view_cart.setText("View Cart \n"+total_items+" items");
+
+
+
+                cart_bottom_layout.setVisibility(View.VISIBLE);
+            }
+            else{
+                cart_bottom_layout.setVisibility(View.GONE);
+            }
+        }
+        else{
+            cart_bottom_layout.setVisibility(View.GONE);
+        }
+    }
 
     // msg display & layout
     public void messageToast(String type, String message)

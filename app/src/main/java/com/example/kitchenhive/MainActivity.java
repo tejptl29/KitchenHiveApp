@@ -3,7 +3,9 @@ package com.example.kitchenhive;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -28,6 +31,9 @@ import com.bumptech.glide.Glide;
 import com.example.kitchenhive.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +42,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity implements PaymentResultWithDataListener {
 
     Button btn_logout;
     SwipeRefreshLayout swipeRefreshLayout;
@@ -59,15 +65,29 @@ public class MainActivity extends BaseActivity{
 
     ArrayList<String> str_categories = new ArrayList<>();
 
+    String email, phone, user_id;
+    double tot_amount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        replaceFragment(new HomeFragment(MainActivity.this));
-        binding.bottomnavview.setSelectedItemId(R.id.home);
 
-        //call_dashboard_api();
+        Intent intent = getIntent();
+        String to_cart = intent.getStringExtra("to_cart");
+
+        email = sharedPreferences.getString("UserEmail","");
+        phone = sharedPreferences.getString("UserPhone","");
+        user_id = sharedPreferences.getString("UserID","");
+
+        if(to_cart != null && to_cart.equals("1")) {
+            replaceFragment(new CartFragment(MainActivity.this));
+        }
+        else{
+            replaceFragment(new HomeFragment(MainActivity.this));
+        }
+        binding.bottomnavview.setSelectedItemId(R.id.home);
 
         binding.bottomnavview.setOnItemSelectedListener(item -> {
             if(item.getItemId() == R.id.home){
@@ -84,6 +104,26 @@ public class MainActivity extends BaseActivity{
             }
             return true;
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //bind_cart_bottom(false);
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.main_frag);
+
+        if (currentFragment != null) {
+            String fragmentName = currentFragment.getClass().getSimpleName();
+            if(fragmentName.equals("CatalogFragment")){
+                bind_cart_bottom(true, MainActivity.this);
+            }
+            else{
+                //replaceFragment(new HomeFragment(MainActivity.this));
+                bind_cart_bottom(false, MainActivity.this);
+            }
+        } else {
+
+        }
     }
 
     public void prominentDialog(){
@@ -259,7 +299,104 @@ public class MainActivity extends BaseActivity{
         fragmentTransaction.commit();
     }
 
+    public void set_order(String user_id, String phone, String email, String order_number,String description , String amount){
+        SharedPreferences cartSharedPreferences = getSharedPreferences(new Utility().PREF_NAME, Context.MODE_PRIVATE);
+        String json = cartSharedPreferences.getString(new Utility().CART_KEY, null);
+        System.out.println(json);
+        APIClass apiClass = new APIClass();
+        apiClass.set_order(user_id,phone,email,order_number,description,amount,json.toString());
+        apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
+            @Override
+            public void onSuccess(String message, JSONObject json) {
+                if(new Utility().checkJSONDataNotNull(json, "order_id")){
+                        CartManager cartManager = new CartManager(MainActivity.this);
+                        cartManager.clearCart();
+                        replaceFragment(new HomeFragment(MainActivity.this));
+                        Intent intent = new Intent(MainActivity.this,ordered_list.class);
+                        startActivity(intent);
+                }
+            }
 
+            @Override
+            public void onFailure(String message) {
+                messageToast("ERROR",message);
+            }
+        });
+    }
+
+
+    public void startPayment(double amount) {
+
+        this.tot_amount = amount;
+
+        //     You need to pass current activity in order to let Razorpay create CheckoutActivity
+
+        final Activity activity = this;
+
+        final Checkout co = new Checkout();
+        co.setKeyID("rzp_test_DKHfmhh5DPWqwY");
+        try {
+
+            // amount to be in paisa only
+
+            double finalAmount = amount*100; // converting 12p rupees into paisa
+
+
+            JSONObject options = new JSONObject();
+            options.put("name", "KitchenHive");
+            options.put("description", "");
+            //You can omit the image option to fetch the image from dashboard
+            //   options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
+            options.put("currency", "INR");
+            options.put("amount", String.valueOf(finalAmount));
+
+            // options.put("order_id", "order_1");//from response of step 3.
+
+            JSONObject preFill = new JSONObject();
+            preFill.put("email", this.email);
+            preFill.put("contact", this.phone);
+
+            JSONObject notes = new JSONObject();
+            notes.put("Product_details", "Test Order");
+
+            options.put("prefill", preFill);
+            options.put("notes",notes);
+
+            co.open(activity, options);
+        } catch (Exception e) {
+            Toast.makeText(activity, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT)
+                    .show();
+            e.printStackTrace();
+
+        }
+    }
+
+    @Override
+    public void onPaymentSuccess(String id, PaymentData paymentData) {
+
+
+//        HashMap<String, String> map = new HashMap<>();
+//        map.put("order_number", id);
+//        map.put("email",this.email);
+//        map.put("description",this.description);
+//        map.put("amount",this.amount);
+//        map.put("user_id",this.ur_id);
+
+        set_order(this.user_id, this.phone, this.email, id, "", String.valueOf(this.tot_amount));
+
+
+
+
+        //prominentDialog(map);
+//        ur_id = "";
+        //System.out.println("id => "+id);
+        //System.out.println(paymentData);
+    }
+
+    @Override
+    public void onPaymentError(int i, String response, PaymentData paymentData) {
+        Toast.makeText(this, response.toString(), Toast.LENGTH_LONG).show();
+    }
 }
 
 class categoriesAdapter extends RecyclerView.Adapter<categoriesViewHolder> {
@@ -540,14 +677,26 @@ class cartAdapter extends RecyclerView.Adapter<cartViewHolder> {
 //                Glide.with(activity).load(empObject.getString("image_url")).into(holder.pro_image);
 //            }
 
+            holder.btn_add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(activity, single_food_dtl.class);
+                    intent.putExtra("store_id", item.getStoreId());
+                    ((MainActivity) activity).startActivity(intent);
+                }
+            });
+
             holder.btn_remove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     CartManager cartManager = new CartManager(activity);
                     cartManager.removeItem(item.getProductId());
-                    ((MainActivity) activity).cartAdapter.notifyDataSetChanged();
+                    CartFragment fragobj = new CartFragment(activity);
+                    ((MainActivity)activity).replaceFragment(fragobj);
                 }
             });
+
+
 
     }
     public int getItemCount() {
@@ -559,7 +708,7 @@ class cartViewHolder extends RecyclerView.ViewHolder {
 
     TextView txt_product,txt_amount,txt_finall_amt,txt_qty;
     ImageView pro_image,txt_veg_non;
-    Button btn_remove;
+    ImageView btn_remove, btn_add;
     ConstraintLayout constraintLayout;
 
 
@@ -573,6 +722,7 @@ class cartViewHolder extends RecyclerView.ViewHolder {
         pro_image = itemView.findViewById(R.id.pro_img);
         txt_veg_non = itemView.findViewById(R.id.pro_veg_non);
         btn_remove = itemView.findViewById(R.id.btn_remove_cart);
+        btn_add = itemView.findViewById(R.id.btn_add_cart);
     }
 }
 

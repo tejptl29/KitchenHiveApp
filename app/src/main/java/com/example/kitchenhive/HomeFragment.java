@@ -2,6 +2,7 @@ package com.example.kitchenhive;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -78,7 +79,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     ImageSlider imageSlider;
     EditText txt_search;
     TextView txt_customer_name,name_initial;
-    ImageView btn_search;
+    ImageView btn_search,btn_ordered_list;
     View view;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        btn_ordered_list = view.findViewById(R.id.img_order);
         imageSlider = view.findViewById(R.id.img_view);
         txt_search= view.findViewById(R.id.search_bar);
         btn_search = view.findViewById(R.id.btn_search);
@@ -170,6 +172,17 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
                 ((MainActivity) mainActivity).replaceFragment(fragobj);
             }
         });
+
+       ((MainActivity) mainActivity).bind_cart_bottom(false, mainActivity);
+
+       btn_ordered_list.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Intent intent = new Intent(mainActivity,ordered_list.class);
+              // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+               startActivity(intent);
+           }
+       });
 
         return view;
     }

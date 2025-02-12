@@ -644,7 +644,7 @@ class APIClass {
         });
     }
 
-    void set_order(String user_id, String email, String order_number,String description , String amount, String address){
+    void set_order(String user_id, String phone, String email, String order_number,String description , String amount, String items){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -655,7 +655,73 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.set_order(user_id,email,order_number,description,amount,address);
+        Call<ResponseBody> apiCall = api.set_order(user_id,phone,email,order_number,description,amount,items);
+        apiCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                try{
+                    if(response.body() != null){
+                        JSONObject res = new JSONObject(response.body().string());
+                        if(res.has("status") && !res.isNull("status") && !res.getString("status").trim().isEmpty()){
+                            if(res.getString("status").trim().equals("1") || res.getString("status").trim().equals("true")){
+
+                                if(res.has("message") && !res.isNull("message") && !res.getString("message").trim().isEmpty()){
+                                    jsonListener.onSuccess(res.getString("message").trim(), new JSONObject(res.getString("data").trim()));
+                                }else {
+                                    jsonListener.onSuccess("Success API Call.", new JSONObject(res.getString("data").trim()));
+                                }
+                            }else{
+                                if(res.has("message") && !res.isNull("message") && !res.getString("message").trim().isEmpty()){
+                                    jsonListener.onFailure(res.getString("message").trim());
+                                }else{
+                                    jsonListener.onFailure("Invalid server response. Please try again.");
+                                }
+                            }
+                        }else{
+                            jsonListener.onFailure("Invalid server response. Please try again.");
+                        }
+                    }else{
+                        jsonListener.onFailure("Server did not respond. Please try again.");
+                    }
+                }catch (JSONException e){
+                    jsonListener.onFailure("JSON Exception.");
+                    e.printStackTrace();
+                }catch (IOException e){
+                    jsonListener.onFailure("I/O Exception.");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if(t instanceof SocketTimeoutException){
+                    jsonListener.onFailure("Connection timeout.");
+                    System.out.println(t.getLocalizedMessage());
+                }else{
+                    if(call.isCanceled()){
+                        jsonListener.onFailure("Forcefully cancel request.");
+                        System.out.println(t.getLocalizedMessage());
+                    }else{
+                        jsonListener.onFailure("Internal server error. Please try again.");
+                        System.out.println(t.getLocalizedMessage());
+                    }
+                }
+            }
+        });
+    }
+
+    void get_orders_data(String user_id){
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API.BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        API api = retrofit.create(API.class);
+        Call<ResponseBody> apiCall = api.get_orders(user_id);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

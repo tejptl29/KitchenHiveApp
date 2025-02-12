@@ -45,7 +45,6 @@ public class CatalogFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
      * @return A new instance of fragment CatlogFragment.
@@ -92,6 +91,7 @@ public class CatalogFragment extends Fragment {
 
         ((MainActivity) mainActivity).get_products_api_call(mParam2, mParam1,(((MainActivity) mainActivity).sharedPreferences.getBoolean("VEG", true) == true ? "1" : "0"));
 
+        ((MainActivity) mainActivity).bind_cart_bottom(true, mainActivity);
         return view;
     }
 }
