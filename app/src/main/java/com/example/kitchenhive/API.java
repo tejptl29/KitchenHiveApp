@@ -70,6 +70,10 @@ public interface API {
     @FormUrlEncoded
     Call<ResponseBody> set_order(@Field("user_id") String user_id,@Field("phone") String phone, @Field("email") String email, @Field("order_number") String order_number, @Field("description") String description, @Field("amount") String amount, @Field("items") String items);
 
+    @POST("api/get_orders/")
+    @FormUrlEncoded
+    Call<ResponseBody> get_orders(@Field("user_id") String user_id);
+
     @POST("api/get_user_subscriptions/")
     @FormUrlEncoded
     Call<ResponseBody> user_subscriptions(@Field("user_id") String user_id );

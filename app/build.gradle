@@ -28,9 +28,6 @@ android {
         viewBinding true
     }
 
-    viewBinding{
-        enabled = true
-    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -66,7 +63,10 @@ dependencies {
     implementation 'com.github.denzcoskun:ImageSlideshow:0.1.0'
 
     implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'com.anton46:stepsview:0.0.2'
+    // implementation 'com.anton46:stepsview:0.0.2'
+   // implementation 'com.kofigyan.stateprogressbar:stateprogressbar:1.0.0'
+    implementation 'kr.co.prnd:stepprogressbar:1.0.0-alpha1'
+
 
 
 

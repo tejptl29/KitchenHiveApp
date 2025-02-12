@@ -118,9 +118,9 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
                 bind_cart_bottom(true, MainActivity.this);
             }
             else{
+                //replaceFragment(new HomeFragment(MainActivity.this));
                 bind_cart_bottom(false, MainActivity.this);
             }
-            System.out.println(("MainActivity"+ "Current Fragment: " + fragmentName));
         } else {
 
         }
@@ -311,8 +311,9 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
                 if(new Utility().checkJSONDataNotNull(json, "order_id")){
                         CartManager cartManager = new CartManager(MainActivity.this);
                         cartManager.clearCart();
-//                    Intent intent = new Intent(MainActivity.this, Subscribe_products.class);
-//                    startActivity(intent);
+                        replaceFragment(new HomeFragment(MainActivity.this));
+                        Intent intent = new Intent(MainActivity.this,ordered_list.class);
+                        startActivity(intent);
                 }
             }
 
