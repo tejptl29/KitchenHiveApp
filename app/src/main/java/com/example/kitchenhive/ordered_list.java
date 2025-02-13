@@ -5,9 +5,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -35,12 +38,15 @@ public class ordered_list extends BaseActivity {
     TextView txt_no_record_found;
     ArrayList<JSONObject> jsonObjectsordered = new ArrayList<>();
     orderAdapter orderAdapter;
+    ImageView btn_back;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ordered_list);
         txt_no_record_found = findViewById(R.id.no_rec_found_ordered);
+        btn_back = findViewById(R.id.btn_back);
 
 
         order_items_recyclerView = findViewById(R.id.order_items_recycle);
@@ -48,6 +54,14 @@ public class ordered_list extends BaseActivity {
         orderAdapter = new orderAdapter(ordered_list.this, jsonObjectsordered);
         order_items_recyclerView.setItemAnimator(new DefaultItemAnimator());
         order_items_recyclerView.setAdapter(orderAdapter);
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
 
         order_list();
     }
@@ -135,6 +149,19 @@ class orderAdapter extends RecyclerView.Adapter<orderViewHolder> {
             holder.txt_qty.setText("Qty:"+empObject.getString("product_quantity"));
             holder.txt_estimate_time.setText("Time:"+empObject.getString("formatted_prepartion_time"));
             holder.txt_store.setText(empObject.getString("store_name"));
+
+            // Set a max of 9 to correspond to 10 steps (0-9)
+            holder.seekBar.setMax(3);
+
+            holder.seekBar.setProgress(Integer.valueOf(empObject.getString("order_status"))); // Start from step 1
+
+            holder.seekBar.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return true;  // This will consume the touch event and prevent interaction
+                }
+            });
+
             if(new Utility().checkJSONDataNotNull(empObject, "image_url")) {
                 Glide.with(activity).load(empObject.getString("image_url")).into(holder.pro_image);
             }
@@ -172,6 +199,7 @@ class orderViewHolder extends RecyclerView.ViewHolder {
     TextView txt_amount,txt_estimate_time,txt_qty;
     ImageView pro_image,veg_non;
     ConstraintLayout constraintLayout;
+    SeekBar seekBar;
 
 
     orderViewHolder(View itemView, int viewType, Activity context) {
@@ -185,5 +213,6 @@ class orderViewHolder extends RecyclerView.ViewHolder {
         veg_non = itemView.findViewById(R.id.pro_veg_non);
         constraintLayout =  itemView.findViewById(R.id.order_items_product);
 
+        seekBar = itemView.findViewById(R.id.order_status_bar);
     }
 }

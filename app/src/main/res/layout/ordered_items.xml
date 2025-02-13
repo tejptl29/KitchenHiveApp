@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/con2"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="220dp"
         android:background="@drawable/btn_qty"
         android:clipToOutline="true"
         app:layout_constraintEnd_toEndOf="parent"
@@ -138,19 +138,85 @@
 <!--            app:spb_stateNumberBackgroundColor="#808080"-->
 <!--            app:spb_stateNumberForegroundColor="#eeeeee"-->
 <!--            tools:ignore="MissingClass" />-->
+<!--        -->
+<!--        <kr.co.prnd.StepProgressBar-->
+<!--            android:id="@+id/order_status_bar"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/pro_estimate_time"-->
+<!--            app:step="7"-->
+<!--            app:stepDoneColor="#ff0000"-->
+<!--            app:stepMargin="8dp"-->
+<!--            app:stepUndoneColor="#dedede"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"/>-->
         
-        <kr.co.prnd.StepProgressBar
+        <SeekBar
             android:id="@+id/order_status_bar"
-            android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@+id/pro_estimate_time"
-            app:step="7"
-            app:stepDoneColor="#ff0000"
-            app:stepMargin="8dp"
-            app:stepUndoneColor="#dedede"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_marginTop="10dp"
+            android:max="3"
+            android:layout_margin="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <!-- TextView for displaying the title -->
+        <!--<TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Step 1"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@+id/order_status_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- A row of labels for each step -->
+        <LinearLayout
+            android:id="@+id/labelsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/order_status_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="5dp"
+            android:gravity="center">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:text="Pending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:text="Cooking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <TextView
+                android:text="Order Ready"
+                android:layout_width="wrap_content"
+                android:paddingStart="20dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <!-- Add more TextViews for other steps (Step 4, Step 5, etc.) -->
+
+            <TextView
+                android:text="Completed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center" />
+        </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
