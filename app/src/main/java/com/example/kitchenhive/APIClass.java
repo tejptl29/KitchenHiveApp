@@ -710,7 +710,7 @@ class APIClass {
         });
     }
 
-    void get_orders_data(String user_id){
+    void get_orders_data(String user_id,String completed){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -721,7 +721,7 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.get_orders(user_id);
+        Call<ResponseBody> apiCall = api.get_orders(user_id,completed);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

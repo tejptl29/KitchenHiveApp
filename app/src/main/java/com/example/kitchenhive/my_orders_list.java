@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -32,41 +31,32 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ordered_list extends BaseActivity {
+public class my_orders_list extends BaseActivity {
 
-    RecyclerView order_items_recyclerView;
+    RecyclerView my_order;
     TextView txt_no_record_found;
-    ArrayList<JSONObject> jsonObjectsordered = new ArrayList<>();
-    orderAdapter orderAdapter;
-    ImageView btn_back,btn_my_orders;
-
+    ArrayList<JSONObject> jsonObjectmyorders = new ArrayList<>();
+    myorderAdapter myorderAdapter;
+    ImageView btn_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ordered_list);
+        setContentView(R.layout.activity_my_orders_list);
+
         txt_no_record_found = findViewById(R.id.no_rec_found_ordered);
         btn_back = findViewById(R.id.btn_back);
-        btn_my_orders = findViewById(R.id.img_my_order);
 
-        order_items_recyclerView = findViewById(R.id.order_items_recycle);
-        order_items_recyclerView.setLayoutManager(new LinearLayoutManager(ordered_list.this, RecyclerView.VERTICAL, false));
-        orderAdapter = new orderAdapter(ordered_list.this, jsonObjectsordered);
-        order_items_recyclerView.setItemAnimator(new DefaultItemAnimator());
-        order_items_recyclerView.setAdapter(orderAdapter);
+        my_order = findViewById(R.id.my_order_recycle);
+        my_order.setLayoutManager(new LinearLayoutManager(my_orders_list.this, RecyclerView.VERTICAL, false));
+        myorderAdapter = new myorderAdapter(my_orders_list.this, jsonObjectmyorders);
+        my_order.setItemAnimator(new DefaultItemAnimator());
+        my_order.setAdapter(myorderAdapter);
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
-            }
-        });
-
-        btn_my_orders.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ordered_list.this,my_orders_list.class);
-                startActivity(intent);
             }
         });
 
@@ -82,12 +72,12 @@ public class ordered_list extends BaseActivity {
                 try {
                     if(new Utility().checkJSONDataNotNull(json, "orders")){
                         JSONArray jsonArray = new JSONArray(json.getString("orders"));
-                        jsonObjectsordered.clear();
+                        jsonObjectmyorders.clear();
                         int saleFlag = 1;
                         if(jsonArray.length() > 0) {
                             // txt_no_record.setVisibility(View.GONE);
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                jsonObjectsordered.add((JSONObject) jsonArray.get(i));
+                                jsonObjectmyorders.add((JSONObject) jsonArray.get(i));
                             }
                         }
                     }
@@ -95,22 +85,22 @@ public class ordered_list extends BaseActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if(jsonObjectsordered.size() <= 0){
+                if(jsonObjectmyorders.size() <= 0){
                     txt_no_record_found.setVisibility(View.VISIBLE);
                 }
                 else{
                     txt_no_record_found.setVisibility(View.GONE);
                 }
 
-                orderAdapter.notifyDataSetChanged();
+                myorderAdapter.notifyDataSetChanged();
 //                catelogAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(String message) {
                 //((MainActivity) mainActivity).messageToast("ERROR", message);
-                jsonObjectsordered.clear();
-                if(jsonObjectsordered.size() <= 0){
+                jsonObjectmyorders.clear();
+                if(jsonObjectmyorders.size() <= 0){
                     txt_no_record_found.setVisibility(View.VISIBLE);
                 }
                 else{
@@ -118,56 +108,57 @@ public class ordered_list extends BaseActivity {
                 }
                 //jsonObjectscatelog.clear();
                 // jsonObjectsprosale.clear();
-                orderAdapter.notifyDataSetChanged();
+                myorderAdapter.notifyDataSetChanged();
                 //catelogAdapter.notifyDataSetChanged();
             }
         });
         String UserID = sharedPreferences.getString("UserID", "");
-        apiClass.get_orders_data(UserID,"0");
+        apiClass.get_orders_data(UserID,"1");
     }
 
 }
 
 
 
-class orderAdapter extends RecyclerView.Adapter<orderViewHolder> {
+class myorderAdapter extends RecyclerView.Adapter<myorderViewHolder> {
 
     Activity activity;
     ArrayList<JSONObject> product = new ArrayList<>();
 
-    orderAdapter(Activity activity, ArrayList<JSONObject> product)
+    myorderAdapter(Activity activity, ArrayList<JSONObject> product)
     {
         this.activity = activity;
         this.product = product;
     }
 
     @NonNull
-    public orderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ordered_items, parent,false);
-        return new orderViewHolder(view, viewType, activity);
+    public myorderViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.completed_items, parent,false);
+        return new myorderViewHolder(view, viewType, activity);
     }
 
     @SuppressLint("ResourceAsColor")
-    public void onBindViewHolder(final orderViewHolder holder, final int position) {
+    public void onBindViewHolder(final myorderViewHolder holder, final int position) {
         try {
             JSONObject empObject = new JSONObject(product.get(position).toString());
             holder.txt_product.setText(empObject.getString("fname"));
             holder.txt_amount.setText("\u20B9 "+empObject.getString("product_total"));
             holder.txt_qty.setText("Qty:"+empObject.getString("product_quantity"));
-            holder.txt_estimate_time.setText("Time:"+empObject.getString("formatted_prepartion_time"));
+            holder.date.setText("Date:"+empObject.getString("created_on"));
+            holder.status.setText("Status:"+empObject.getString("order_status_text"));
             holder.txt_store.setText(empObject.getString("store_name"));
 
             // Set a max of 9 to correspond to 10 steps (0-9)
-            holder.seekBar.setMax(3);
-
-            holder.seekBar.setProgress(Integer.valueOf(empObject.getString("order_status"))); // Start from step 1
-
-            holder.seekBar.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    return true;  // This will consume the touch event and prevent interaction
-                }
-            });
+//            holder.seekBar.setMax(3);
+//
+//            holder.seekBar.setProgress(Integer.valueOf(empObject.getString("order_status"))); // Start from step 1
+//
+//            holder.seekBar.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    return true;  // This will consume the touch event and prevent interaction
+//                }
+//            });
 
             if(new Utility().checkJSONDataNotNull(empObject, "image_url")) {
                 Glide.with(activity).load(empObject.getString("image_url")).into(holder.pro_image);
@@ -200,26 +191,25 @@ class orderAdapter extends RecyclerView.Adapter<orderViewHolder> {
     }
 }
 
-class orderViewHolder extends RecyclerView.ViewHolder {
+class myorderViewHolder extends RecyclerView.ViewHolder {
 
     TextView txt_product,txt_store;
-    TextView txt_amount,txt_estimate_time,txt_qty;
+    TextView txt_amount,date,txt_qty,status;
     ImageView pro_image,veg_non;
     ConstraintLayout constraintLayout;
-    SeekBar seekBar;
 
 
-    orderViewHolder(View itemView, int viewType, Activity context) {
+    myorderViewHolder(View itemView, int viewType, Activity context) {
         super(itemView);
         txt_store = itemView.findViewById(R.id.store_name);
         txt_product = itemView.findViewById(R.id.pro_name);
         txt_amount = itemView.findViewById(R.id.pro_amt);
         txt_qty = itemView.findViewById(R.id.pro_qty);
-        txt_estimate_time = itemView.findViewById(R.id.pro_estimate_time);
+        date = itemView.findViewById(R.id.order_date);
         pro_image = itemView.findViewById(R.id.pro_img);
+        status = itemView.findViewById(R.id.order_status);
         veg_non = itemView.findViewById(R.id.pro_veg_non);
-        constraintLayout =  itemView.findViewById(R.id.order_items_product);
+        constraintLayout =  itemView.findViewById(R.id.my_order_items_product);
 
-        seekBar = itemView.findViewById(R.id.order_status_bar);
     }
 }

@@ -17,6 +17,9 @@
         android:theme="@style/Theme.KitchenHive"
         tools:targetApi="31">
         <activity
+            android:name=".my_orders_list"
+            android:exported="false" />
+        <activity
             android:name=".ordered_list"
             android:exported="false" />
         <activity

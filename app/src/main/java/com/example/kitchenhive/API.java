@@ -11,8 +11,8 @@ public interface API {
 
 //    String BASE_URL = "http://192.168.0.65/product/app100/";
 
-    //String BASE_URL = "http://192.168.0.65:8000/";
-    String BASE_URL = "http://192.168.1.101:8000/";
+    String BASE_URL = "http://192.168.0.65:8000/";
+    //String BASE_URL = "http://192.168.1.101:8000/";
 
     @Headers({
             "Accept: application/json",
@@ -72,7 +72,7 @@ public interface API {
 
     @POST("api/get_orders/")
     @FormUrlEncoded
-    Call<ResponseBody> get_orders(@Field("user_id") String user_id);
+    Call<ResponseBody> get_orders(@Field("user_id") String user_id,@Field("completed") String completed);
 
     @POST("api/get_user_subscriptions/")
     @FormUrlEncoded
