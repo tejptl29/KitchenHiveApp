@@ -1,8 +1,11 @@
 package com.example.kitchenhive;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -30,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Login extends BaseActivity {
 
-    TextView  txtcreate;
+    TextView  txtcreate,txt_forget_pwd;
     EditText inputemail,inputpass;
     Button btn_login;
     ProgressBar progress;
@@ -42,6 +45,7 @@ public class Login extends BaseActivity {
         setContentView(R.layout.activity_login);
 
         txtcreate = findViewById(R.id.txtcreate);
+        txt_forget_pwd = findViewById(R.id.txt_forget_pwd);
         btn_login = findViewById(R.id.btnlogin);
         inputemail = findViewById(R.id.emailedittext);
         inputpass = findViewById(R.id.pwdedittext);
@@ -54,6 +58,13 @@ public class Login extends BaseActivity {
                 Intent intent = new Intent(Login.this,Registration.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+            }
+        });
+
+        txt_forget_pwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                prominentDialog();
             }
         });
 
@@ -129,5 +140,50 @@ public class Login extends BaseActivity {
         });
 
     }
+    public void prominentDialog(){
+        Dialog dialog = new Dialog(Login.this, R.style.Theme_Dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.forgetpassword);
+        Login.this.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        final Button sendBtn = dialog.findViewById(R.id.send_btn);
+        final Button cancleBtn = dialog.findViewById(R.id.email_cancle_btn);
+        final EditText inputemail = dialog.findViewById(R.id.reg_email);
+        final EditText input_new_pass = dialog.findViewById(R.id.reset_password);
 
+        cancleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Proceed();
+                if (!inputemail.getText().toString().isEmpty() && !input_new_pass.getText().toString().isEmpty()){
+                    APIClass apiClass = new APIClass();
+                    apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
+                        @Override
+                        public void onSuccess(String message, JSONObject json) {
+                            dialog.dismiss();
+                            messageToast("SUCCESS", message);
+                        }
+                        @Override
+                        public void onFailure(String message) {
+                            dialog.dismiss();
+                            messageToast("ERROR", message);
+                        }
+                    });
+                    apiClass.user_forget_password(inputemail.getText().toString(),input_new_pass.getText().toString());
+
+                }
+                else {
+                    messageToast("ERROR","Please Enter Email");
+                }
+            }
+        });
+        dialog.show();
+    }
 }

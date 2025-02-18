@@ -70,12 +70,13 @@
 
         <TextView
             android:id="@+id/pro_name"
-            android:layout_width="wrap_content"
+            android:layout_width="190dp"
+            android:maxLines="2"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="2dp"
             android:layout_marginTop="39dp"
             android:text="PIZZA"
-            android:textSize="18sp"
+            android:textSize="15sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/pro_veg_non"/>
 
@@ -129,22 +130,22 @@
             android:id="@+id/btn_add_cart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/baseline_add_shopping_cart_24"
+            android:src="@drawable/add_cart"
             android:gravity="center"
             android:layout_marginEnd="42dp"
             android:padding="0dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/btn_qty"
-            android:layout_width="25dp"
+            android:layout_width="27dp"
             android:layout_height="35dp"/>
 
         <ImageView
             android:id="@+id/btn_remove_cart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btn_add_cart"
-            android:src="@drawable/baseline_delete_24"
+            android:src="@drawable/bin"
             android:gravity="center"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="15dp"
             android:padding="0dp"
             android:layout_marginBottom="15dp"
