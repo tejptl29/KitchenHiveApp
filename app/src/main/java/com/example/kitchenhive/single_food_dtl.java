@@ -174,91 +174,83 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
             else{
                 Glide.with(activity).load(activity.getDrawable(R.drawable.veg1)).into(holder.txt_veg_non);
             }
-            holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-//                    Intent intent = new Intent(activity, ProductDetail.class);
-//                    try {
-//                        intent.putExtra("product_id", empObject.getString("id"));
-//                    } catch (JSONException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                    activity.startActivity(intent);
-                }
-            });
-
-            CartManager cartManager = new CartManager(activity);
-            int pro_qty = cartManager.getItemQuantity(empObject.getString("id"));
-            if(pro_qty > 0){
-                holder.btn_add.setVisibility(View.INVISIBLE);
-                holder.qty_layout.setVisibility(View.VISIBLE);
-                holder.txt_qty.setText(String.valueOf(pro_qty));
+            if(empObject.getString("product_closed").equals("1")){
+                holder.btn_add.setVisibility(View.GONE);
+                holder.qty_layout.setVisibility(View.GONE);
             }
             else{
-                holder.btn_add.setVisibility(View.VISIBLE);
-                holder.qty_layout.setVisibility(View.INVISIBLE);
-                holder.txt_qty.setText("0");
-            }
-
-            holder.btn_add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+                CartManager cartManager = new CartManager(activity);
+                int pro_qty = cartManager.getItemQuantity(empObject.getString("id"));
+                if(pro_qty > 0){
                     holder.btn_add.setVisibility(View.INVISIBLE);
                     holder.qty_layout.setVisibility(View.VISIBLE);
-                    holder.txt_qty.setText("1");
-
-                    try {
-
-                        double total = Double.valueOf(empObject.getString("fprice")) * 1;
-                        CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), 1, empObject.getString("image_url"), total, empObject.getString("ftype"));
-                        cartManager.addItem(newItem);
-
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    ((single_food_dtl) activity).bind_cart_bottom(true, activity);
+                    holder.txt_qty.setText(String.valueOf(pro_qty));
                 }
-            });
-
-            holder.btn_minus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int qty = ((single_food_dtl) activity).change_qty("DEC", holder.txt_qty, holder.btn_add, holder.qty_layout);
-
-                    try {
-                        CartManager cartManager = new CartManager(activity);
-                        if(qty > 0) {
-                            cartManager.removeItem(empObject.getString("id"));
-                            double total = Double.valueOf(empObject.getString("fprice")) * qty;
-                            CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
-                            cartManager.addItem(newItem);
-                        }
-                        else{
-                            cartManager.removeItem(empObject.getString("id"));
-                        }
-                        System.out.println(cartManager.getCart());
-                        System.out.println(cartManager.getItemQuantity(empObject.getString("id")));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    ((single_food_dtl) activity).bind_cart_bottom(true, activity);
+                else{
+                    holder.btn_add.setVisibility(View.VISIBLE);
+                    holder.qty_layout.setVisibility(View.INVISIBLE);
+                    holder.txt_qty.setText("0");
                 }
-            });
 
-            holder.btn_plus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int qty = ((single_food_dtl) activity).change_qty("INC", holder.txt_qty, holder.btn_add, holder.qty_layout);
-                    try {
-                        CartManager cartManager = new CartManager(activity);
-                        if(qty > 0) {
-                            cartManager.removeItem(empObject.getString("id"));
-                            double total = Double.valueOf(empObject.getString("fprice")) * qty;
-                            CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
+                holder.btn_add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        holder.btn_add.setVisibility(View.INVISIBLE);
+                        holder.qty_layout.setVisibility(View.VISIBLE);
+                        holder.txt_qty.setText("1");
+
+                        try {
+
+                            double total = Double.valueOf(empObject.getString("fprice")) * 1;
+                            CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), 1, empObject.getString("image_url"), total, empObject.getString("ftype"));
                             cartManager.addItem(newItem);
+
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        ((single_food_dtl) activity).bind_cart_bottom(true, activity);
+                    }
+                });
+
+                holder.btn_minus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int qty = ((single_food_dtl) activity).change_qty("DEC", holder.txt_qty, holder.btn_add, holder.qty_layout);
+
+                        try {
+                            CartManager cartManager = new CartManager(activity);
+                            if(qty > 0) {
+                                cartManager.removeItem(empObject.getString("id"));
+                                double total = Double.valueOf(empObject.getString("fprice")) * qty;
+                                CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
+                                cartManager.addItem(newItem);
+                            }
+                            else{
+                                cartManager.removeItem(empObject.getString("id"));
+                            }
+                            System.out.println(cartManager.getCart());
+                            System.out.println(cartManager.getItemQuantity(empObject.getString("id")));
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        ((single_food_dtl) activity).bind_cart_bottom(true, activity);
+                    }
+                });
+
+                holder.btn_plus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int qty = ((single_food_dtl) activity).change_qty("INC", holder.txt_qty, holder.btn_add, holder.qty_layout);
+                        try {
+                            CartManager cartManager = new CartManager(activity);
+                            if(qty > 0) {
+                                cartManager.removeItem(empObject.getString("id"));
+                                double total = Double.valueOf(empObject.getString("fprice")) * qty;
+                                CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
+                                cartManager.addItem(newItem);
                             /*if(cartManager.product_exist(empObject.getString("id"))){
                                 cartManager.setItemQuantity(empObject.getString("id"), qty);
                             }
@@ -266,19 +258,22 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
                                 CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), 1);
                                 cartManager.addItem(newItem);
                             }*/
+                            }
+                            else{
+                                cartManager.removeItem(empObject.getString("id"));
+                            }
+                            System.out.println(cartManager.getCart());
+                            System.out.println(cartManager.getItemQuantity(empObject.getString("id")));
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
                         }
-                        else{
-                            cartManager.removeItem(empObject.getString("id"));
-                        }
-                        System.out.println(cartManager.getCart());
-                        System.out.println(cartManager.getItemQuantity(empObject.getString("id")));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
 
-                    ((single_food_dtl) activity).bind_cart_bottom(true, activity);
-                }
-            });
+                        ((single_food_dtl) activity).bind_cart_bottom(true, activity);
+                    }
+                });
+            }
+
+
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -111,8 +111,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
 <!--    <TextView-->
 <!--        android:id="@+id/txt_items_amount"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
