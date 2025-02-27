@@ -255,7 +255,7 @@ class APIClass {
         });
     }*/
 
-    void dashboard_data(String user_id, String veg){
+    void dashboard_data(String user_id, String veg, String latitude, String longitude){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -266,7 +266,7 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.get_dashboard_data(user_id, veg);
+        Call<ResponseBody> apiCall = api.get_dashboard_data(user_id, veg, latitude,longitude);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -318,7 +318,7 @@ class APIClass {
             }
         });
     }
-    void get_products(String user_id,String search,String cat_id,String veg){
+    void get_products(String user_id,String search,String cat_id,String veg, String latitude, String longitude){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -329,7 +329,7 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.get_products(user_id,search,cat_id,veg);
+        Call<ResponseBody> apiCall = api.get_products(user_id,search,cat_id,veg, latitude ,longitude);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -382,7 +382,7 @@ class APIClass {
         });
     }
 
-    void get_stores_data(String user_id,String store_id){
+    void get_stores_data(String user_id,String store_id, String latitude, String longitude){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -393,7 +393,7 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.get_stores_data(user_id, store_id);
+        Call<ResponseBody> apiCall = api.get_stores_data(user_id, store_id, latitude, longitude);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

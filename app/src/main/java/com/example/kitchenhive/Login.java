@@ -2,6 +2,7 @@ package com.example.kitchenhive;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -30,6 +33,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+import android.Manifest;
 
 public class Login extends BaseActivity {
 
@@ -51,6 +55,7 @@ public class Login extends BaseActivity {
         inputpass = findViewById(R.id.pwdedittext);
         progress = findViewById(R.id.login_progressbar);
 
+        ask_permission();
 
         txtcreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +145,35 @@ public class Login extends BaseActivity {
         });
 
     }
+
+    public void ask_permission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            //System.out.println("here ask");
+            // Permission is not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed to get the location
+                //getCurrentLocation();
+                //System.out.println("im in granted");
+            } else {
+                // Permission denied, show a message or take an alternative action
+//                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                //System.out.println("im in");
+                //ask_permission();
+            }
+        }
+    }
+
+
     public void prominentDialog(){
         Dialog dialog = new Dialog(Login.this, R.style.Theme_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

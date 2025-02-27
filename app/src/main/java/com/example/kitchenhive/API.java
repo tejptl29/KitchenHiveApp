@@ -20,7 +20,7 @@ public interface API {
     })
     @POST("api/get_data/")
     @FormUrlEncoded
-    Call<ResponseBody> get_dashboard_data(@Field("user_id") String user_id, @Field("veg") String veg);
+    Call<ResponseBody> get_dashboard_data(@Field("user_id") String user_id, @Field("veg") String veg, @Field("latitude") String latitude, @Field("longitude") String longitude);
 
     @Headers({
             "Accept: application/json",
@@ -28,11 +28,11 @@ public interface API {
     })
     @POST("api/get_products/")
     @FormUrlEncoded
-    Call<ResponseBody> get_products(@Field("user_id") String user_id,@Field("search") String search,@Field("cat_id") String cat_id,@Field("veg") String veg);
+    Call<ResponseBody> get_products(@Field("user_id") String user_id,@Field("search") String search,@Field("cat_id") String cat_id,@Field("veg") String veg,@Field("latitude") String latitude, @Field("longitude") String longitude);
 
     @POST("api/get_stores_data/")
     @FormUrlEncoded
-    Call<ResponseBody> get_stores_data(@Field("user_id") String user_id,@Field("store_id") String store_id);
+    Call<ResponseBody> get_stores_data(@Field("user_id") String user_id,@Field("store_id") String store_id,@Field("latitude") String latitude, @Field("longitude") String longitude);
 
     @POST("api/register_user/")
     @FormUrlEncoded

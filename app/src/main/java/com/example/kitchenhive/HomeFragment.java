@@ -153,7 +153,8 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         ((MainActivity) mainActivity). recyclerView.setItemAnimator(new DefaultItemAnimator());
         ((MainActivity) mainActivity). recyclerView.setAdapter(((MainActivity) mainActivity).categoriesAdapter);
 
-        ((MainActivity) mainActivity).call_dashboard_api();
+
+        ((MainActivity) mainActivity).getCurrentLocation("DASH");
 
         //product item categories
         recyclerViewpro = view.findViewById(R.id.item_recycle);
@@ -191,7 +192,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     public void onRefresh() {
         if(!((MainActivity) mainActivity).swipeRefreshLayout.isRefreshing())
             ((MainActivity) mainActivity).swipeRefreshLayout.setRefreshing(true);
-        ((MainActivity) mainActivity).call_dashboard_api();
+        ((MainActivity) mainActivity).getCurrentLocation("DASH");
     }
 
 

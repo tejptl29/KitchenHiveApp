@@ -1,12 +1,17 @@
 package com.example.kitchenhive;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +26,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -29,6 +36,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.kitchenhive.databinding.ActivityMainBinding;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.razorpay.Checkout;
@@ -60,7 +70,8 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
 
     TextView cat_no_record;
     TextView home_no_rec_found;
-    RecyclerView recyclerViewcatlog,recyclerView,cartrecyclerView;;
+    RecyclerView recyclerViewcatlog, recyclerView, cartrecyclerView;
+
     Switch non_veg_switch;
 
     ArrayList<String> str_categories = new ArrayList<>();
@@ -68,42 +79,99 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
     String email, phone, user_id;
     double tot_amount;
 
+    FusedLocationProviderClient fusedLocationClient;
+    double latitude = 0;
+    double longitude = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
+        checkPermission();
+
         Intent intent = getIntent();
         String to_cart = intent.getStringExtra("to_cart");
 
-        email = sharedPreferences.getString("UserEmail","");
-        phone = sharedPreferences.getString("UserPhone","");
-        user_id = sharedPreferences.getString("UserID","");
+        email = sharedPreferences.getString("UserEmail", "");
+        phone = sharedPreferences.getString("UserPhone", "");
+        user_id = sharedPreferences.getString("UserID", "");
 
-        if(to_cart != null && to_cart.equals("1")) {
+        if (to_cart != null && to_cart.equals("1")) {
             replaceFragment(new CartFragment(MainActivity.this));
-        }
-        else{
+        } else {
             replaceFragment(new HomeFragment(MainActivity.this));
         }
         binding.bottomnavview.setSelectedItemId(R.id.home);
 
         binding.bottomnavview.setOnItemSelectedListener(item -> {
-            if(item.getItemId() == R.id.home){
+            if (item.getItemId() == R.id.home) {
                 replaceFragment(new HomeFragment(MainActivity.this));
-            }
-            else if(item.getItemId() == R.id.catalog){
+            } else if (item.getItemId() == R.id.catalog) {
                 replaceFragment(new CatalogFragment(MainActivity.this));
-            }
-            else if(item.getItemId() == R.id.cart){
+            } else if (item.getItemId() == R.id.cart) {
                 replaceFragment(new CartFragment(MainActivity.this));
-            }
-            else if(item.getItemId() == R.id.profile){
+            } else if (item.getItemId() == R.id.profile) {
                 replaceFragment(new ProfileFragment(MainActivity.this));
             }
             return true;
         });
+    }
+
+    public void getCurrentLocation(String call) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            // Use the location object to get the latitude and longitude
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                            if(call.equals("DASH")){
+                                call_dashboard_api();
+                            }
+                        } else {
+                            // Location is null, handle accordingly (e.g., prompt user to enable GPS)
+                            System.out.println("Location : Location is null");
+                        }
+                    }
+                });
+    }
+
+    public void checkPermission(){
+        if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            //System.out.println("NOT GRANTED");
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                String backAccess = "";
+                if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                    backAccess = android.Manifest.permission.ACCESS_BACKGROUND_LOCATION;
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{backAccess, android.Manifest.permission.ACCESS_FINE_LOCATION}, 3);
+            }else{
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 3);
+            }
+        }else{
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 3 && grantResults.length > 0){
+            checkPermission();
+        }
     }
 
     @Override
@@ -114,10 +182,9 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
 
         if (currentFragment != null) {
             String fragmentName = currentFragment.getClass().getSimpleName();
-            if(fragmentName.equals("CatalogFragment")){
+            if (fragmentName.equals("CatalogFragment")) {
                 bind_cart_bottom(true, MainActivity.this);
-            }
-            else{
+            } else {
                 //replaceFragment(new HomeFragment(MainActivity.this));
                 bind_cart_bottom(false, MainActivity.this);
             }
@@ -126,11 +193,11 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
         }
     }
 
-    public void prominentDialog(){
+    public void prominentDialog() {
         Dialog dialog = new Dialog(MainActivity.this, R.style.Theme_Dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.non_veg);
-        MainActivity.this.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+        MainActivity.this.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.setCancelable(false);
         dialog.setCanceledOnTouchOutside(false);
         final Button sendBtn = dialog.findViewById(R.id.proceed_btn);
@@ -155,7 +222,7 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
         dialog.show();
     }
 
-    public void get_products_api_call(String search,String cat_id,String veg){
+    public void get_products_api_call(String search, String cat_id, String veg) {
         APIClass apiClass = new APIClass();
         apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
             @Override
@@ -163,9 +230,9 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
                 // spinner in catelog call
                 jsonObjectscatelog.clear();
                 try {
-                    if(new Utility().checkJSONDataNotNull(json, "products")){
+                    if (new Utility().checkJSONDataNotNull(json, "products")) {
                         JSONArray jsonArray = new JSONArray(json.getString("products"));
-                        if(jsonArray.length() > 0) {
+                        if (jsonArray.length() > 0) {
                             // txt_no_record.setVisibility(View.GONE);
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 jsonObjectscatelog.add((JSONObject) jsonArray.get(i));
@@ -175,12 +242,11 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if(jsonObjectscatelog.size() <= 0){
+                if (jsonObjectscatelog.size() <= 0) {
                     cat_no_record.setVisibility(View.VISIBLE);
                     recyclerViewcatlog.setVisibility(View.GONE);
-                }
-                else{
-                   cat_no_record.setVisibility(View.GONE);
+                } else {
+                    cat_no_record.setVisibility(View.GONE);
                     recyclerViewcatlog.setVisibility(View.VISIBLE);
                 }
                 catelogAdapter.notifyDataSetChanged();
@@ -189,21 +255,18 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
             @Override
             public void onFailure(String message) {
                 //((MainActivity) mainActivity).messageToast("ERROR", message);
-                System.out.println(message);
                 jsonObjectscatelog.clear();
-                if(jsonObjectscatelog.size() <= 0){
-                   cat_no_record.setVisibility(View.VISIBLE);
-                }
-                else{
-                   cat_no_record.setVisibility(View.GONE);
+                if (jsonObjectscatelog.size() <= 0) {
+                    cat_no_record.setVisibility(View.VISIBLE);
+                } else {
+                    cat_no_record.setVisibility(View.GONE);
                 }
                 catelogAdapter.notifyDataSetChanged();
             }
         });
         String UserID = sharedPreferences.getString("UserID", "");
-        apiClass.get_products(UserID,search,cat_id,veg);
+        apiClass.get_products(UserID, search, cat_id, veg, String.valueOf(latitude),String.valueOf(longitude));
     }
-
 
     public void call_dashboard_api() {
         String veg = "1";
@@ -289,7 +352,7 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
             }
         });
         String UserID = sharedPreferences.getString("UserID", "");
-        apiClass.dashboard_data(UserID, veg);
+        apiClass.dashboard_data(UserID, veg, String.valueOf(latitude), String.valueOf(longitude));
     }
 
     public void replaceFragment(Fragment fragment){
@@ -490,6 +553,7 @@ class productAdapter extends RecyclerView.Adapter<productViewHolder> {
             holder.txt_product.setText(empObject.getString("fname"));
             holder.txt_amount.setText(empObject.getString("fprice"));
             holder.txt_store.setText(empObject.getString("store_name"));
+            holder.txt_distance.setText(empObject.getString("distance"));
             if(new Utility().checkJSONDataNotNull(empObject, "image_url")) {
                 Glide.with(activity).load(empObject.getString("image_url")).into(holder.pro_image);
             }
@@ -517,7 +581,7 @@ class productAdapter extends RecyclerView.Adapter<productViewHolder> {
 
 class productViewHolder extends RecyclerView.ViewHolder {
 
-    TextView txt_product,txt_store;
+    TextView txt_product,txt_store,txt_distance;
     TextView txt_amount;
     ImageView pro_image;
     ConstraintLayout constraintLayout;
@@ -526,6 +590,7 @@ class productViewHolder extends RecyclerView.ViewHolder {
     productViewHolder(View itemView, int viewType, Activity context) {
         super(itemView);
         txt_store = itemView.findViewById(R.id.store_name);
+        txt_distance = itemView.findViewById(R.id.store_distance);
         txt_product = itemView.findViewById(R.id.txt_food);
         txt_amount = itemView.findViewById(R.id.txt_price);
         pro_image = itemView.findViewById(R.id.pro_img);
@@ -557,6 +622,7 @@ class catelogAdapter extends RecyclerView.Adapter<catelogViewHolder> {
             JSONObject empObject = new JSONObject(catelog.get(position).toString());
             holder.txt_product.setText(empObject.getString("fname"));
             holder.txt_store.setText(empObject.getString("store_name"));
+            holder.txt_distance.setText(empObject.getString("distance"));
             holder.txt_amount.setText(empObject.getString("fprice"));
 
 //
@@ -611,7 +677,7 @@ class catelogAdapter extends RecyclerView.Adapter<catelogViewHolder> {
 
 class catelogViewHolder extends RecyclerView.ViewHolder {
 
-    TextView txt_store,txt_product;
+    TextView txt_store,txt_product,txt_distance;
     TextView txt_amount;
     ImageView pro_image;
     ConstraintLayout constraintLayout;
@@ -621,6 +687,7 @@ class catelogViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         constraintLayout = itemView.findViewById(R.id.sales_view_items);
         txt_store = itemView.findViewById(R.id.store_name);
+        txt_distance = itemView.findViewById(R.id.store_distance);
         txt_product = itemView.findViewById(R.id.txt_food);
         txt_amount = itemView.findViewById(R.id.txt_price);
         pro_image = itemView.findViewById(R.id.pro_img);
