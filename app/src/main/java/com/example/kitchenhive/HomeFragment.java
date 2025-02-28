@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     private String mParam1;
     private String mParam2;
 
-    protected Activity mainActivity;
+    public Activity mainActivity;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -103,6 +103,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         txt_customer_name = view.findViewById(R.id.txt_name);
         name_initial = view.findViewById(R.id.name_inital);
 
+
         ((MainActivity) mainActivity).home_no_rec_found = view.findViewById(R.id.home_no_rec_found);
 
         //customer name display
@@ -154,7 +155,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         ((MainActivity) mainActivity). recyclerView.setAdapter(((MainActivity) mainActivity).categoriesAdapter);
 
 
-        ((MainActivity) mainActivity).getCurrentLocation("DASH");
+        ((MainActivity) mainActivity).checkPermission(true);
 
         //product item categories
         recyclerViewpro = view.findViewById(R.id.item_recycle);
@@ -192,7 +193,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     public void onRefresh() {
         if(!((MainActivity) mainActivity).swipeRefreshLayout.isRefreshing())
             ((MainActivity) mainActivity).swipeRefreshLayout.setRefreshing(true);
-        ((MainActivity) mainActivity).getCurrentLocation("DASH");
+        ((MainActivity) mainActivity).checkPermission(true);
     }
 
 

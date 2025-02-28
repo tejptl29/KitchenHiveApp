@@ -59,7 +59,6 @@ public class single_food_dtl extends BaseActivity {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         checkPermission();
-        getCurrentLocation();
 
         Intent intent = getIntent();
         store_id = intent.getStringExtra("store_id");
@@ -89,7 +88,10 @@ public class single_food_dtl extends BaseActivity {
             }
         });
 
+        bind_cart_bottom(true, single_food_dtl.this);
+    }
 
+    public void get_store_data(){
         String userID = sharedPreferences.getString("UserID", "");
         APIClass apiClass = new APIClass();
         apiClass.get_stores_data(userID, store_id, String.valueOf(latitude),String.valueOf(longitude));
@@ -135,11 +137,9 @@ public class single_food_dtl extends BaseActivity {
                 messageToast("ERROR", message);
             }
         });
-
-        bind_cart_bottom(true, single_food_dtl.this);
     }
 
-    public void getCurrentLocation() {
+    public void getCurrentLocation(String call) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -158,6 +158,9 @@ public class single_food_dtl extends BaseActivity {
                             // Use the location object to get the latitude and longitude
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
+                            if(call.equals("STORE")){
+                                get_store_data();
+                            }
                         } else {
                             // Location is null, handle accordingly (e.g., prompt user to enable GPS)
                             System.out.println("Location : Location is null");
@@ -186,7 +189,7 @@ public class single_food_dtl extends BaseActivity {
                 ActivityCompat.requestPermissions(single_food_dtl.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 3);
             }
         }else{
-            getCurrentLocation();
+            getCurrentLocation("STORE");
         }
     }
 
