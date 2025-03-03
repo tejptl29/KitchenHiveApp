@@ -128,8 +128,6 @@ public class ordered_list extends BaseActivity {
 
 }
 
-
-
 class orderAdapter extends RecyclerView.Adapter<orderViewHolder> {
 
     Activity activity;
@@ -172,12 +170,46 @@ class orderAdapter extends RecyclerView.Adapter<orderViewHolder> {
             if(new Utility().checkJSONDataNotNull(empObject, "image_url")) {
                 Glide.with(activity).load(empObject.getString("image_url")).into(holder.pro_image);
             }
+
             if(empObject.getString("ftype").equals("1")){
                 Glide.with(activity).load(activity.getDrawable(R.drawable.non_veg_icon)).into(holder.veg_non);
             }
             else{
                 Glide.with(activity).load(activity.getDrawable(R.drawable.veg1)).into(holder.veg_non);
             }
+
+            if(empObject.getString("order_status").equals("0")){
+                holder.btn_cancle_order.setVisibility(View.VISIBLE);
+            }
+            else{
+                holder.btn_cancle_order.setVisibility(View.INVISIBLE);
+            }
+
+            holder.btn_cancle_order.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        if(!empObject.getString("order_number").isEmpty()){
+                            String UserID = ((ordered_list) activity).sharedPreferences.getString("UserID", "");
+                            APIClass apiClass = new APIClass();
+                            apiClass.set_cancel_order(UserID,empObject.getString("order_number"));
+                            apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
+                                @Override
+                                public void onSuccess(String message, JSONObject json) {
+                                    ((ordered_list) activity).messageToast("SUCCESS", message);
+                                }
+                                @Override
+                                public void onFailure(String message) {
+                                    ((ordered_list) activity).messageToast("ERROR", message);
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
             holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -204,7 +236,7 @@ class orderViewHolder extends RecyclerView.ViewHolder {
 
     TextView txt_product,txt_store;
     TextView txt_amount,txt_estimate_time,txt_qty;
-    ImageView pro_image,veg_non;
+    ImageView pro_image,veg_non,btn_cancle_order;
     ConstraintLayout constraintLayout;
     SeekBar seekBar;
 
@@ -218,6 +250,7 @@ class orderViewHolder extends RecyclerView.ViewHolder {
         txt_estimate_time = itemView.findViewById(R.id.pro_estimate_time);
         pro_image = itemView.findViewById(R.id.pro_img);
         veg_non = itemView.findViewById(R.id.pro_veg_non);
+        btn_cancle_order = itemView.findViewById(R.id.btn_cancle_order);
         constraintLayout =  itemView.findViewById(R.id.order_items_product);
 
         seekBar = itemView.findViewById(R.id.order_status_bar);

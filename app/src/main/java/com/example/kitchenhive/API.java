@@ -12,7 +12,7 @@ public interface API {
 //    String BASE_URL = "http://192.168.0.65/product/app100/";
 
     String BASE_URL = "http://192.168.0.65:8000/";
-    //String BASE_URL = "http://192.168.1.101:8000/";
+    //String BASE_URL = "http://192.168.1.103:8000/";
 
     @Headers({
             "Accept: application/json",
@@ -33,6 +33,11 @@ public interface API {
     @POST("api/get_stores_data/")
     @FormUrlEncoded
     Call<ResponseBody> get_stores_data(@Field("user_id") String user_id,@Field("store_id") String store_id,@Field("latitude") String latitude, @Field("longitude") String longitude);
+
+    @POST("api/set_cancel_order/")
+    @FormUrlEncoded
+    Call<ResponseBody> set_cancel_order(@Field("user_id") String user_id,@Field("payment_id") String payment_id);
+
 
     @POST("api/register_user/")
     @FormUrlEncoded

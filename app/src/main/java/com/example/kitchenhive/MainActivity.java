@@ -542,7 +542,7 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
         final Activity activity = this;
 
         final Checkout co = new Checkout();
-        co.setKeyID("rzp_test_DKHfmhh5DPWqwY");
+        co.setKeyID("rzp_test_CxYCSg07JJUldY");
         try {
 
             // amount to be in paisa only
@@ -558,7 +558,8 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
             options.put("currency", "INR");
             options.put("amount", String.valueOf(finalAmount));
 
-            // options.put("order_id", "order_1");//from response of step 3.
+
+            //options.put("order_id", new Utility().generateOrderId(this.user_id));//from response of step 3.
 
             JSONObject preFill = new JSONObject();
             preFill.put("email", this.email);
@@ -572,6 +573,7 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
 
             co.open(activity, options);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             Toast.makeText(activity, "Error in payment: " + e.getMessage(), Toast.LENGTH_SHORT)
                     .show();
             e.printStackTrace();
@@ -590,6 +592,7 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
 //        map.put("amount",this.amount);
 //        map.put("user_id",this.ur_id);
 
+        //System.out.println(paymentData);
         set_order(this.user_id, this.phone, this.email, id, "", String.valueOf(this.tot_amount));
 
 
