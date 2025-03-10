@@ -169,7 +169,7 @@ public class BaseActivity extends AppCompatActivity {
         errorBlock = findViewById(R.id.error_block);
 
         if(type.equals("SUCCESS")){
-            errorBlock.setBackgroundColor(Color.GREEN);
+            errorBlock.setBackgroundTintList(getResources().getColorStateList(R.color.success));
         }
         else if(type.equals("WARNING")){
             errorBlock.setBackgroundColor(Color.YELLOW);

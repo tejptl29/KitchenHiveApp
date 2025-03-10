@@ -192,11 +192,12 @@ class orderAdapter extends RecyclerView.Adapter<orderViewHolder> {
                         if(!empObject.getString("order_number").isEmpty()){
                             String UserID = ((ordered_list) activity).sharedPreferences.getString("UserID", "");
                             APIClass apiClass = new APIClass();
-                            apiClass.set_cancel_order(UserID,empObject.getString("order_number"));
+                            apiClass.set_cancel_order(UserID,empObject.getString("store_order_item_id"));
                             apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
                                 @Override
                                 public void onSuccess(String message, JSONObject json) {
                                     ((ordered_list) activity).messageToast("SUCCESS", message);
+                                    ((ordered_list) activity).order_list();
                                 }
                                 @Override
                                 public void onFailure(String message) {

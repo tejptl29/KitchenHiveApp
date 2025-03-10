@@ -318,7 +318,7 @@ class APIClass {
             }
         });
     }
-    void set_cancel_order(String user_id, String payment_id){
+    void set_cancel_order(String user_id, String store_order_item_id){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -329,7 +329,7 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.set_cancel_order(user_id, payment_id);
+        Call<ResponseBody> apiCall = api.set_cancel_order(user_id, store_order_item_id);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -339,7 +339,7 @@ class APIClass {
                         if(res.has("status") && !res.isNull("status") && !res.getString("status").trim().isEmpty()){
                             if(res.getString("status").trim().equals("1") || res.getString("status").trim().equals("true")){
                                 if(res.has("data") && !res.isNull("data") && !res.getString("data").trim().isEmpty()){
-                                    jsonListener.onSuccess("Success API Call.", new JSONObject(res.getString("data").trim()));
+                                    jsonListener.onSuccess(res.getString("message").trim(), new JSONObject(res.getString("data").trim()));
                                 }else
                                     jsonListener.onFailure("Empty server data response. Please try again.");
                             }else{

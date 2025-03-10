@@ -107,11 +107,18 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         ((MainActivity) mainActivity).home_no_rec_found = view.findViewById(R.id.home_no_rec_found);
 
         //customer name display
-        txt_customer_name.setText(((MainActivity) mainActivity).sharedPreferences.getString("UserName", ""));
+        //txt_customer_name.setText(((MainActivity) mainActivity).sharedPreferences.getString("UserName", ""));
 
         //name initial display
         String name_initial_str = new Utility().getNameInitials(((MainActivity) mainActivity).sharedPreferences.getString("UserName", ""));
         name_initial.setText(name_initial_str);
+
+        name_initial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) mainActivity).replaceFragment(new ProfileFragment(mainActivity));
+            }
+        });
 
         ((MainActivity) mainActivity).non_veg_switch = view.findViewById(R.id.btn_veg);
         boolean veg = true;

@@ -1,6 +1,7 @@
 package com.example.kitchenhive;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -68,6 +69,7 @@ public class ProfileFragment extends Fragment {
 
     Button btn_logout;
     TextView name_initial,txt_name,txt_email,txt_phone;
+    ImageView chat_bot_btn;
     View view;
 
 
@@ -82,12 +84,21 @@ public class ProfileFragment extends Fragment {
        txt_name = view.findViewById(R.id.name_txt);
        txt_email = view.findViewById(R.id.email_txt);
        txt_phone = view.findViewById(R.id.phone_txt);
+       chat_bot_btn = view.findViewById(R.id.chat_bot_btn);
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.out.println(btn_logout);
                 ((MainActivity) mainActivity).doLogout(mainActivity);
+            }
+        });
+
+        chat_bot_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(((MainActivity) mainActivity), chatbot.class);
+                startActivity(intent);
             }
         });
 

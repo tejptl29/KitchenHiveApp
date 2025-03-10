@@ -2,6 +2,7 @@ package com.example.kitchenhive;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
@@ -12,7 +13,7 @@ public interface API {
 //    String BASE_URL = "http://192.168.0.65/product/app100/";
 
     String BASE_URL = "http://192.168.0.65:8000/";
-    //String BASE_URL = "http://192.168.1.103:8000/";
+    //String BASE_URL = "http://192.168.110.59:8000/";
 
     @Headers({
             "Accept: application/json",
@@ -36,8 +37,10 @@ public interface API {
 
     @POST("api/set_cancel_order/")
     @FormUrlEncoded
-    Call<ResponseBody> set_cancel_order(@Field("user_id") String user_id,@Field("payment_id") String payment_id);
+    Call<ResponseBody> set_cancel_order(@Field("user_id") String user_id,@Field("store_order_item_id") String store_order_item_id);
 
+    @POST("chat")
+    Call<ChatResponse> sendMessage(@Field("message") String message);
 
     @POST("api/register_user/")
     @FormUrlEncoded

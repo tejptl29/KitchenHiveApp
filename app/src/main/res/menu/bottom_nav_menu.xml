@@ -17,4 +17,6 @@
         android:icon="@drawable/bottom_nav_style_profile"
         android:id="@+id/profile"/>
 
+
+
 </menu>
