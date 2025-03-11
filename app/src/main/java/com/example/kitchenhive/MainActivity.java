@@ -220,6 +220,7 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
                 .show();
     }
 
+
     private void showPermissionDeniedDialog() {
         // Show a dialog explaining that the feature will not work without the permission
         new AlertDialog.Builder(this)
@@ -303,6 +304,8 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
 
         }
     }*/
+
+    
 
     @Override
     protected void onResume() {

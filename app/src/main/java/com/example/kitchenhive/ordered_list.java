@@ -2,6 +2,7 @@ package com.example.kitchenhive;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
@@ -126,6 +128,50 @@ public class ordered_list extends BaseActivity {
         apiClass.get_orders_data(UserID,"0");
     }
 
+    public void showAlertDialog(String store_order_item_id) {
+        // Create an AlertDialog Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Set the title and message for the dialog
+        builder.setTitle("Cancel Order")
+                .setMessage("Are you sure you want to cancel your order ?")
+
+                // Set the "Yes" button
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Handle the Yes button click
+                        // For example, log or perform an action
+                        String UserID = sharedPreferences.getString("UserID", "");
+                        APIClass apiClass = new APIClass();
+                        apiClass.set_cancel_order(UserID, store_order_item_id);
+                        apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
+                            @Override
+                            public void onSuccess(String message, JSONObject json) {
+                                messageToast("SUCCESS", message);
+                                order_list();
+                            }
+                            @Override
+                            public void onFailure(String message) {
+                                messageToast("ERROR", message);
+                            }
+                        });
+                    }
+                })
+                // Set the "No" button
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Handle the No button click
+                        // For example, dismiss the dialog
+                        dialog.dismiss();
+                    }
+                });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 }
 
 class orderAdapter extends RecyclerView.Adapter<orderViewHolder> {
@@ -189,22 +235,7 @@ class orderAdapter extends RecyclerView.Adapter<orderViewHolder> {
                 @Override
                 public void onClick(View v) {
                     try {
-                        if(!empObject.getString("order_number").isEmpty()){
-                            String UserID = ((ordered_list) activity).sharedPreferences.getString("UserID", "");
-                            APIClass apiClass = new APIClass();
-                            apiClass.set_cancel_order(UserID,empObject.getString("store_order_item_id"));
-                            apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
-                                @Override
-                                public void onSuccess(String message, JSONObject json) {
-                                    ((ordered_list) activity).messageToast("SUCCESS", message);
-                                    ((ordered_list) activity).order_list();
-                                }
-                                @Override
-                                public void onFailure(String message) {
-                                    ((ordered_list) activity).messageToast("ERROR", message);
-                                }
-                            });
-                        }
+                        ((ordered_list) activity).showAlertDialog(empObject.getString("store_order_item_id"));
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
@@ -256,4 +287,5 @@ class orderViewHolder extends RecyclerView.ViewHolder {
 
         seekBar = itemView.findViewById(R.id.order_status_bar);
     }
+
 }
