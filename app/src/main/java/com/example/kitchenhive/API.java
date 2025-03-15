@@ -39,6 +39,14 @@ public interface API {
     @FormUrlEncoded
     Call<ResponseBody> set_cancel_order(@Field("user_id") String user_id,@Field("store_order_item_id") String store_order_item_id);
 
+    @POST("api/set_faq_ques_ans/")
+    @FormUrlEncoded
+    Call<ResponseBody> faq_ques_ans(@Field("user_id") String user_id);
+
+    @POST("api/get_faq_ans/")
+    @FormUrlEncoded
+    Call<ResponseBody> get_faq_ans(@Field("user_id") String user_id,@Field("ques_id") String ques_id);
+
     @POST("chat")
     Call<ChatResponse> sendMessage(@Field("message") String message);
 
