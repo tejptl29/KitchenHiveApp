@@ -188,6 +188,8 @@
                                 android:layout_margin="10dp"
                                 android:layout_marginTop="20dp"
                                 android:background="#efeff5"
+                                android:paddingBottom="60dp"
+                                android:clipToPadding="false"
                                 android:nestedScrollingEnabled="true"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -196,11 +198,35 @@
 
                             </androidx.recyclerview.widget.RecyclerView>
 
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 
+
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:backgroundTint="#7096D1"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/btn_circle"
+            android:layout_width="60dp"
+            android:layout_height="60dp">
+
+            <ImageView
+                android:id="@+id/ai_chatbot_btn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/chatbotimg2"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

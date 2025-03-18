@@ -16,7 +16,7 @@
         android:paddingEnd="20dp"
         android:paddingVertical="5dp"
         android:textColor="@color/white"
-        android:backgroundTint="#70c3cf"
+        android:backgroundTint="#7096D1"
         android:elevation="10dp"
         android:text="How to do login and register in Kitchen Hive?"
         app:layout_constraintStart_toStartOf="parent"

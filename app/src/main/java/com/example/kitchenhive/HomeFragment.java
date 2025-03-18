@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     ImageSlider imageSlider;
     EditText txt_search;
     TextView txt_customer_name,name_initial;
-    ImageView btn_search,btn_ordered_list;
+    ImageView btn_search,btn_ordered_list,btn_ai_chatbot;
     View view;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +102,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         btn_search = view.findViewById(R.id.btn_search);
         txt_customer_name = view.findViewById(R.id.txt_name);
         name_initial = view.findViewById(R.id.name_inital);
+        btn_ai_chatbot = view.findViewById(R.id.ai_chatbot_btn);
 
 
         ((MainActivity) mainActivity).home_no_rec_found = view.findViewById(R.id.home_no_rec_found);
@@ -117,6 +118,14 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
             @Override
             public void onClick(View v) {
                 ((MainActivity) mainActivity).replaceFragment(new ProfileFragment(mainActivity));
+            }
+        });
+
+        btn_ai_chatbot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              Intent intent = new Intent(mainActivity, chatbot.class);
+              startActivity(intent);
             }
         });
 

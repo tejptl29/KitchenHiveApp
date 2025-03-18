@@ -3,6 +3,7 @@ package com.example.kitchenhive;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,11 @@ public class chatbot extends BaseActivity {
     faqAdapter faqAdapter;
     ansAdapter ansAdapter;
 
+    public Handler handler = new Handler();
+    public int dotCount = 0;
+    public int charIndex = 0;
+    public boolean isTypingStarted=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,11 +67,25 @@ public class chatbot extends BaseActivity {
 
         btn_back = findViewById(R.id.back_btn);
         faq_ques_rcv = findViewById(R.id.chatbot_faq_qus_rcv);
-        faq_ques_rcv.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.HORIZONTAL));
+        faq_ques_rcv.setLayoutManager(new StaggeredGridLayoutManager(3, LinearLayoutManager.HORIZONTAL));
         faqAdapter = new faqAdapter(chatbot.this, faqjsonObjects);
         faq_ques_rcv.setItemAnimator(new DefaultItemAnimator());
         faq_ques_rcv.setAdapter(faqAdapter);
         get_chatbot_faq_api_call();
+
+        JSONObject default_message1 = new JSONObject();
+        JSONObject default_message2 = new JSONObject();
+        try {
+            default_message1.put("faq_qus", "___default");
+            default_message1.put("faq_ans", "Hi, How can i help you?");
+            //default_message2.put("faq_qus", "___default");
+            //default_message2.put("faq_ans", "How can i help you?");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        ansjsonObjects.add(default_message1);
+        //ansjsonObjects.add(default_message2);
 
         faq_ans_rcv = findViewById(R.id.chatbot_ai_user_rcv);
         faq_ans_rcv.setLayoutManager(new LinearLayoutManager(chatbot.this, LinearLayoutManager.VERTICAL, false));
@@ -110,6 +130,61 @@ public class chatbot extends BaseActivity {
         });
         String UserID = sharedPreferences.getString("UserID", "");
         apiClass.faq_ques_ans(UserID);
+    }
+
+    public void startLoadingAnimation(TextView textView, String ans) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String baseText = "Loading";
+                dotCount = (dotCount + 1) % 4; // Cycle through 0, 1, 2, 3 dots
+                String dots = new String(new char[dotCount]).replace("\0", ".");
+                textView.setText(baseText + dots);
+
+                if (!isTypingStarted) {
+                    handler.postDelayed(this, 500); // Keep loading until typing starts
+                } else {
+                    //textView.setVisibility(View.GONE);
+                }
+            }
+        }, 500);
+
+        // Start typing effect after 3 seconds
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                textView.setVisibility(View.VISIBLE);
+                startTypingEffect(textView, ans);
+                isTypingStarted = true;
+            }
+        },2000);
+    }
+
+    // Typing effect: character by character
+    public void startTypingEffect(TextView textView, String ans) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (charIndex < ans.length()) {
+                    // Add one character at a time
+                    textView.setText(ans.substring(0, charIndex + 1));
+                    charIndex++;
+
+                    scrollToBottom();
+                    // Delay between each character
+                    handler.postDelayed(this, 10); // 50ms for fast typing like a chatbot
+                }
+            }
+        },10);
+    }
+
+    public void scrollToBottom() {
+        faq_ans_rcv.post(new Runnable() {
+            @Override
+            public void run() {
+                faq_ans_rcv.smoothScrollToPosition(ansAdapter.getItemCount() - 1);
+            }
+        });
     }
 }
 
@@ -218,11 +293,31 @@ class ansAdapter extends RecyclerView.Adapter<ansViewHolder> {
         try {
             JSONObject ans = new JSONObject(String.valueOf(cart.get(position)));
 
-            System.out.println(ans);
+            if(ans.getString("faq_qus").equals("___default")){
+                holder.right_chat_view.setVisibility(View.GONE);
+            }
+            else {
+                holder.right_chat_view.setVisibility(View.VISIBLE);
+                holder.txt_ques.setText(ans.getString("faq_qus"));
+            }
+
+            ((chatbot) activity).scrollToBottom();
 
             holder.txt_ques.setText(ans.getString("faq_qus"));
-            holder.txt_answ.setText(ans.getString("faq_ans"));
 
+//            holder.txt_answ.setText(ans.getString("faq_ans"));
+
+            if((position + 1) == cart.size()){
+                ((chatbot) activity).dotCount = 0;
+                ((chatbot) activity).charIndex = 0;
+                ((chatbot) activity).isTypingStarted=false;
+                ((chatbot) activity).startLoadingAnimation(holder.txt_answ, ans.getString("faq_ans"));
+            }
+            else{
+                holder.txt_answ.setText(ans.getString("faq_ans"));
+            }
+
+            //((chatbot) activity).startLoadingAnimation(holder.txt_answ, ans.getString("faq_ans"));
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -238,7 +333,7 @@ class ansAdapter extends RecyclerView.Adapter<ansViewHolder> {
 class ansViewHolder extends RecyclerView.ViewHolder {
 
     TextView txt_ques,txt_answ;
-    ConstraintLayout relativeLayout;
+    ConstraintLayout relativeLayout, right_chat_view;
 
 
     ansViewHolder(View itemView, int viewType, Activity context) {
@@ -246,6 +341,7 @@ class ansViewHolder extends RecyclerView.ViewHolder {
         relativeLayout = itemView.findViewById(R.id.constrain_ans);
         txt_ques = itemView.findViewById(R.id.right_chat_text_view);
         txt_answ = itemView.findViewById(R.id.left_chat_text_view);
+        right_chat_view = itemView.findViewById(R.id.right_chat_view);
     }
 }
 

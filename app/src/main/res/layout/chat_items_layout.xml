@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/right_chat_view"
         android:background="@drawable/btn_qty"
-        android:backgroundTint="#7CB342"
+        android:backgroundTint="#7096D1"
         android:layout_marginStart="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,7 +25,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="hello i am fine"
+            android:text="Loading"
             android:gravity="end"
             android:id="@+id/right_chat_text_view"
             android:textColor="@color/white"
@@ -43,7 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/left_chat_view"
         android:background="@drawable/btn_qty"
-        android:backgroundTint="#1E88E5"
+        android:backgroundTint="#D0E3FF"
         android:padding="8dp">
 
         <TextView
@@ -54,10 +54,9 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/left_chat_text_view"
-            android:text="hello hii how are you"
-            android:textColor="@color/white"
+            android:text="Loading"
+            android:textColor="@color/black"
             android:textSize="18sp" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
