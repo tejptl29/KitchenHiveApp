@@ -77,7 +77,7 @@ public class chatbot extends BaseActivity {
         JSONObject default_message2 = new JSONObject();
         try {
             default_message1.put("faq_qus", "___default");
-            default_message1.put("faq_ans", "Hi, How can i help you?");
+            default_message1.put("faq_ans", "Hi, How can i assist you?");
             //default_message2.put("faq_qus", "___default");
             //default_message2.put("faq_ans", "How can i help you?");
         } catch (JSONException e) {

@@ -40,7 +40,7 @@
         <ImageView
             android:id="@+id/chatbot_img"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/chatbotimg1"
+            android:src="@drawable/chatbotimg2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/chatbot_text"
             android:layout_width="40dp"
@@ -92,7 +92,7 @@
 
         <EditText
             android:id="@+id/chatbot_msg_writer"
-            android:background="@drawable/btn_qty"
+            android:background="@drawable/chat_background"
             android:layout_marginTop="10dp"
             android:layout_margin="10dp"
             android:hint="Ask a questions"

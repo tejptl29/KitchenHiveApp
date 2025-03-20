@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/right_chat_view"
-        android:background="@drawable/btn_qty"
+        android:background="@drawable/chat_background"
         android:backgroundTint="#7096D1"
         android:layout_marginStart="100dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +42,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/left_chat_view"
-        android:background="@drawable/btn_qty"
+        android:background="@drawable/chat_background"
         android:backgroundTint="#D0E3FF"
         android:padding="8dp">
 
@@ -55,7 +55,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/left_chat_text_view"
             android:text="Loading"
-            android:textColor="@color/black"
+            android:textColor="#3A7CA5"
             android:textSize="18sp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

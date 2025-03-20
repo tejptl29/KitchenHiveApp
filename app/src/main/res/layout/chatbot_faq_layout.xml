@@ -10,7 +10,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginHorizontal="10dp"
         android:textSize="19sp"
-        android:background="@drawable/btn_qty"
+        android:background="@drawable/chat_background"
         android:gravity="center|start"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
