@@ -48,7 +48,8 @@ public class chatbot extends BaseActivity {
 //    TextView chatbotResponse;
 //    private API chatService;
     RecyclerView faq_ques_rcv,faq_ans_rcv;
-    ImageView btn_back;
+    ImageView btn_back,btn_send;
+    EditText input_ques;
     ArrayList<JSONObject> faqjsonObjects = new ArrayList<>();
     ArrayList<JSONObject> ansjsonObjects = new ArrayList<>();
 
@@ -66,6 +67,8 @@ public class chatbot extends BaseActivity {
         setContentView(R.layout.activity_chatbot);
 
         btn_back = findViewById(R.id.back_btn);
+        input_ques = findViewById(R.id.chatbot_msg_writer);
+        btn_send = findViewById(R.id.send_btn);
         faq_ques_rcv = findViewById(R.id.chatbot_faq_qus_rcv);
         faq_ques_rcv.setLayoutManager(new StaggeredGridLayoutManager(3, LinearLayoutManager.HORIZONTAL));
         faqAdapter = new faqAdapter(chatbot.this, faqjsonObjects);
@@ -92,6 +95,39 @@ public class chatbot extends BaseActivity {
         ansAdapter = new ansAdapter(chatbot.this, ansjsonObjects);
         faq_ans_rcv.setItemAnimator(new DefaultItemAnimator());
         faq_ans_rcv.setAdapter(ansAdapter);
+
+
+        btn_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                input_ques.getText().toString();
+                APIClass apiClass = new APIClass();
+                apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
+                    @Override
+                    public void onSuccess(String message, JSONObject json) {
+                        System.out.println(json);
+                        try {
+                            if (new Utility().checkJSONDataNotNull(json, "data")) {
+                                JSONObject jsonObject = new JSONObject(json.getString("data"));
+                                ansjsonObjects.add(jsonObject);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        ansAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        // faqjsonObjects.clear();
+                        //faqAdapter.notifyDataSetChanged();
+                    }
+                });
+                String UserID = sharedPreferences.getString("UserID", "");
+                apiClass.get_chatbot_ques(UserID,input_ques.getText().toString());
+                input_ques.setText("");
+            }
+        });
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override

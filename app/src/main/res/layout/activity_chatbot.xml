@@ -108,12 +108,12 @@
         <ImageView
             android:id="@+id/send_btn"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/sendbtnimg"
+            android:src="@drawable/sendbuttonimg2"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintStart_toEndOf="@+id/chatbot_msg_writer"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="40dp"/>
 
 

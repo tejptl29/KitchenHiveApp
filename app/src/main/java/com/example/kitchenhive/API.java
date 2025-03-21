@@ -47,6 +47,11 @@ public interface API {
     @FormUrlEncoded
     Call<ResponseBody> get_faq_ans(@Field("user_id") String user_id,@Field("ques_id") String ques_id);
 
+    @POST("api/chat_message/")
+    @FormUrlEncoded
+    Call<ResponseBody> get_chatbot_ques(@Field("user_id") String user_id,@Field("ques_txt") String ques_txt);
+
+
     @POST("chat")
     Call<ChatResponse> sendMessage(@Field("message") String message);
 
