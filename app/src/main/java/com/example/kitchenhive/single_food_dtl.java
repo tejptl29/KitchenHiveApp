@@ -51,7 +51,6 @@ public class single_food_dtl extends BaseActivity {
     double latitude = 0;
     double longitude = 0;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -303,8 +302,6 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
                             else{
                                 cartManager.removeItem(empObject.getString("id"));
                             }
-                            System.out.println(cartManager.getCart());
-                            System.out.println(cartManager.getItemQuantity(empObject.getString("id")));
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }

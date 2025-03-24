@@ -510,7 +510,7 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
     }
 
     public void set_order(String user_id, String phone, String email, String order_number,String description , String amount){
-        SharedPreferences cartSharedPreferences = getSharedPreferences(new Utility().PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences cartSharedPreferences = getSharedPreferences(new Utility().PREF_NAME+user_id, Context.MODE_PRIVATE);
         String json = cartSharedPreferences.getString(new Utility().CART_KEY, null);
         System.out.println(json);
         APIClass apiClass = new APIClass();

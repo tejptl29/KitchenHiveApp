@@ -28,7 +28,7 @@
             android:id="@+id/txt_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ordered List"
+            android:text="Order List"
             android:textAlignment="center"
             android:textColor="@android:color/black"
             android:textSize="30sp"

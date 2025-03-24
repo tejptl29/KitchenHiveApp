@@ -197,21 +197,26 @@ public class Login extends BaseActivity {
             public void onClick(View view) {
                 //Proceed();
                 if (!inputemail.getText().toString().isEmpty() && !input_new_pass.getText().toString().isEmpty()){
-                    APIClass apiClass = new APIClass();
-                    apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
-                        @Override
-                        public void onSuccess(String message, JSONObject json) {
-                            dialog.dismiss();
-                            messageToast("SUCCESS", message);
-                        }
-                        @Override
-                        public void onFailure(String message) {
-                            dialog.dismiss();
-                            messageToast("ERROR", message);
-                        }
-                    });
-                    apiClass.user_forget_password(inputemail.getText().toString(),input_new_pass.getText().toString());
 
+                    if (input_new_pass.getText().toString().length() < 6){
+                        messageToast("ERROR", "Password must be 6 character long");
+                    }
+                    else{
+                        APIClass apiClass = new APIClass();
+                        apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
+                            @Override
+                            public void onSuccess(String message, JSONObject json) {
+                                dialog.dismiss();
+                                messageToast("SUCCESS", message);
+                            }
+                            @Override
+                            public void onFailure(String message) {
+                                dialog.dismiss();
+                                messageToast("ERROR", message);
+                            }
+                        });
+                        apiClass.user_forget_password(inputemail.getText().toString(),input_new_pass.getText().toString());
+                    }
                 }
                 else {
                     messageToast("ERROR","Please Enter Email");
