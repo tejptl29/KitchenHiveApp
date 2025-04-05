@@ -134,6 +134,7 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+
             <ProgressBar
                 android:id="@+id/login_progressbar"
                 app:layout_constraintTop_toBottomOf="@+id/pwdinput"
@@ -153,7 +154,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_margin="10dp"
-                android:background="@drawable/btn_qty"
+                android:background="@drawable/btn_add"
                 android:elevation="10dp"
                 android:layout_height="50dp"/>
 
@@ -171,6 +172,21 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
                 android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/txt_forget_pwd"
+                android:text="Forget Password !"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                android:textColor="#5495ff"
+                app:layout_constraintTop_toBottomOf="@+id/txtcreate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_height="match_parent" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

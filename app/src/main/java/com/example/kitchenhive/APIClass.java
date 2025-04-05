@@ -255,7 +255,7 @@ class APIClass {
         });
     }*/
 
-    void dashboard_data(String user_id, String veg){
+    void dashboard_data(String user_id, String veg, String latitude, String longitude){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -266,7 +266,7 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.get_dashboard_data(user_id, veg);
+        Call<ResponseBody> apiCall = api.get_dashboard_data(user_id, veg, latitude,longitude);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -318,7 +318,7 @@ class APIClass {
             }
         });
     }
-    void get_products(String user_id,String search,String cat_id,String veg){
+    void set_cancel_order(String user_id, String store_order_item_id){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -329,7 +329,263 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.get_products(user_id,search,cat_id,veg);
+        Call<ResponseBody> apiCall = api.set_cancel_order(user_id, store_order_item_id);
+        apiCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                try{
+                    if(response.body() != null){
+                        JSONObject res = new JSONObject(response.body().string());
+                        if(res.has("status") && !res.isNull("status") && !res.getString("status").trim().isEmpty()){
+                            if(res.getString("status").trim().equals("1") || res.getString("status").trim().equals("true")){
+                                if(res.has("data") && !res.isNull("data") && !res.getString("data").trim().isEmpty()){
+                                    jsonListener.onSuccess(res.getString("message").trim(), new JSONObject(res.getString("data").trim()));
+                                }else
+                                    jsonListener.onFailure("Empty server data response. Please try again.");
+                            }else{
+                                if(res.has("message") && !res.isNull("message") && !res.getString("message").trim().isEmpty()){
+                                    jsonListener.onFailure(res.getString("message").trim());
+                                }else{
+                                    jsonListener.onFailure("Invalid server response. Please try again.");
+                                }
+                            }
+                        }else{
+                            jsonListener.onFailure("Invalid server response. Please try again.");
+                        }
+                    }else{
+                        jsonListener.onFailure("Server did not respond. Please try again.");
+                    }
+                }catch (JSONException e){
+                    jsonListener.onFailure("JSON Exception.");
+                    e.printStackTrace();
+                }catch (IOException e){
+                    jsonListener.onFailure("I/O Exception.");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if(t instanceof SocketTimeoutException){
+                    jsonListener.onFailure("Connection timeout.");
+                    //System.out.println(t.getLocalizedMessage());
+                }else{
+                    if(call.isCanceled()){
+                        jsonListener.onFailure("Forcefully cancel request.");
+                        //System.out.println(t.getLocalizedMessage());
+                    }else{
+                        jsonListener.onFailure("Internal server error. Please try again.");
+                        //System.out.println(t.getLocalizedMessage());
+                    }
+                }
+            }
+        });
+    }
+
+    void faq_ques_ans(String user_id){
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API.BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        API api = retrofit.create(API.class);
+        Call<ResponseBody> apiCall = api.faq_ques_ans(user_id);
+        apiCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                try{
+                    if(response.body() != null){
+                        JSONObject res = new JSONObject(response.body().string());
+                        if(res.has("status") && !res.isNull("status") && !res.getString("status").trim().isEmpty()){
+                            if(res.getString("status").trim().equals("1") || res.getString("status").trim().equals("true")){
+                                if(res.has("data") && !res.isNull("data") && !res.getString("data").trim().isEmpty()){
+                                    jsonListener.onSuccess(res.getString("message").trim(), new JSONObject(res.getString("data").trim()));
+                                }else
+                                    jsonListener.onFailure("Empty server data response. Please try again.");
+                            }else{
+                                if(res.has("message") && !res.isNull("message") && !res.getString("message").trim().isEmpty()){
+                                    jsonListener.onFailure(res.getString("message").trim());
+                                }else{
+                                    jsonListener.onFailure("Invalid server response. Please try again.");
+                                }
+                            }
+                        }else{
+                            jsonListener.onFailure("Invalid server response. Please try again.");
+                        }
+                    }else{
+                        jsonListener.onFailure("Server did not respond. Please try again.");
+                    }
+                }catch (JSONException e){
+                    jsonListener.onFailure("JSON Exception.");
+                    e.printStackTrace();
+                }catch (IOException e){
+                    jsonListener.onFailure("I/O Exception.");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if(t instanceof SocketTimeoutException){
+                    jsonListener.onFailure("Connection timeout.");
+                    //System.out.println(t.getLocalizedMessage());
+                }else{
+                    if(call.isCanceled()){
+                        jsonListener.onFailure("Forcefully cancel request.");
+                        //System.out.println(t.getLocalizedMessage());
+                    }else{
+                        jsonListener.onFailure("Internal server error. Please try again.");
+                        //System.out.println(t.getLocalizedMessage());
+                    }
+                }
+            }
+        });
+    }
+
+    void get_faq_ans(String user_id, String ques_id){
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API.BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        API api = retrofit.create(API.class);
+        Call<ResponseBody> apiCall = api.get_faq_ans(user_id, ques_id);
+        apiCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                try{
+                    if(response.body() != null){
+                        JSONObject res = new JSONObject(response.body().string());
+                        if(res.has("status") && !res.isNull("status") && !res.getString("status").trim().isEmpty()){
+                            if(res.getString("status").trim().equals("1") || res.getString("status").trim().equals("true")){
+                                if(res.has("data") && !res.isNull("data") && !res.getString("data").trim().isEmpty()){
+                                    jsonListener.onSuccess(res.getString("message").trim(), new JSONObject(res.getString("data").trim()));
+                                }else
+                                    jsonListener.onFailure("Empty server data response. Please try again.");
+                            }else{
+                                if(res.has("message") && !res.isNull("message") && !res.getString("message").trim().isEmpty()){
+                                    jsonListener.onFailure(res.getString("message").trim());
+                                }else{
+                                    jsonListener.onFailure("Invalid server response. Please try again.");
+                                }
+                            }
+                        }else{
+                            jsonListener.onFailure("Invalid server response. Please try again.");
+                        }
+                    }else{
+                        jsonListener.onFailure("Server did not respond. Please try again.");
+                    }
+                }catch (JSONException e){
+                    jsonListener.onFailure("JSON Exception.");
+                    e.printStackTrace();
+                }catch (IOException e){
+                    jsonListener.onFailure("I/O Exception.");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if(t instanceof SocketTimeoutException){
+                    jsonListener.onFailure("Connection timeout.");
+                    //System.out.println(t.getLocalizedMessage());
+                }else{
+                    if(call.isCanceled()){
+                        jsonListener.onFailure("Forcefully cancel request.");
+                        //System.out.println(t.getLocalizedMessage());
+                    }else{
+                        jsonListener.onFailure("Internal server error. Please try again.");
+                        //System.out.println(t.getLocalizedMessage());
+                    }
+                }
+            }
+        });
+    }
+
+    void get_chatbot_ques(String user_id, String ques_txt){
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API.BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        API api = retrofit.create(API.class);
+        Call<ResponseBody> apiCall = api.get_chatbot_ques(user_id, ques_txt);
+        apiCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                try{
+                    if(response.body() != null){
+                        JSONObject res = new JSONObject(response.body().string());
+                        if(res.has("status") && !res.isNull("status") && !res.getString("status").trim().isEmpty()){
+                            if(res.getString("status").trim().equals("1") || res.getString("status").trim().equals("true")){
+                                if(res.has("data") && !res.isNull("data") && !res.getString("data").trim().isEmpty()){
+                                    jsonListener.onSuccess(res.getString("message").trim(), new JSONObject(res.getString("data").trim()));
+                                }else
+                                    jsonListener.onFailure("Empty server data response. Please try again.");
+                            }else{
+                                if(res.has("message") && !res.isNull("message") && !res.getString("message").trim().isEmpty()){
+                                    jsonListener.onFailure(res.getString("message").trim());
+                                }else{
+                                    jsonListener.onFailure("Invalid server response. Please try again.");
+                                }
+                            }
+                        }else{
+                            jsonListener.onFailure("Invalid server response. Please try again.");
+                        }
+                    }else{
+                        jsonListener.onFailure("Server did not respond. Please try again.");
+                    }
+                }catch (JSONException e){
+                    jsonListener.onFailure("JSON Exception.");
+                    e.printStackTrace();
+                }catch (IOException e){
+                    jsonListener.onFailure("I/O Exception.");
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if(t instanceof SocketTimeoutException){
+                    jsonListener.onFailure("Connection timeout.");
+                    //System.out.println(t.getLocalizedMessage());
+                }else{
+                    if(call.isCanceled()){
+                        jsonListener.onFailure("Forcefully cancel request.");
+                        //System.out.println(t.getLocalizedMessage());
+                    }else{
+                        jsonListener.onFailure("Internal server error. Please try again.");
+                        //System.out.println(t.getLocalizedMessage());
+                    }
+                }
+            }
+        });
+    }
+
+    void get_products(String user_id,String search,String cat_id,String veg, String latitude, String longitude){
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(API.BASE_URL)
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        API api = retrofit.create(API.class);
+        Call<ResponseBody> apiCall = api.get_products(user_id,search,cat_id,veg, latitude ,longitude);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -382,7 +638,7 @@ class APIClass {
         });
     }
 
-    void get_stores_data(String user_id,String store_id){
+    void get_stores_data(String user_id,String store_id, String latitude, String longitude){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -393,7 +649,7 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.get_stores_data(user_id, store_id);
+        Call<ResponseBody> apiCall = api.get_stores_data(user_id, store_id, latitude, longitude);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -710,7 +966,7 @@ class APIClass {
         });
     }
 
-    void get_orders_data(String user_id){
+    void get_orders_data(String user_id,String completed){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
@@ -721,7 +977,7 @@ class APIClass {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         API api = retrofit.create(API.class);
-        Call<ResponseBody> apiCall = api.get_orders(user_id);
+        Call<ResponseBody> apiCall = api.get_orders(user_id,completed);
         apiCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

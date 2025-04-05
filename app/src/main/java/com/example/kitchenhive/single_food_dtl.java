@@ -3,6 +3,9 @@ package com.example.kitchenhive;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +18,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +38,7 @@ import java.util.ArrayList;
 
 public class single_food_dtl extends BaseActivity {
 
-    TextView txt_veg_nonveg,txt_open_close,txt_open_close_time,txt_store_name,txt_owner_name,txt_store_address,txt_store_number;
+    TextView txt_veg_nonveg,txt_distance,txt_open_close,txt_open_close_time,txt_store_name,txt_owner_name,txt_store_address,txt_store_number;
     RecyclerView store_pro_recyclerView;
     String store_id = "";
     ImageButton btn_back;
@@ -39,11 +47,17 @@ public class single_food_dtl extends BaseActivity {
     ArrayList<JSONObject> jsonObjects = new ArrayList<>();
     storeproAdapter storeproAdapter;
 
-    @SuppressLint("MissingInflatedId")
+    FusedLocationProviderClient fusedLocationClient;
+    double latitude = 0;
+    double longitude = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_store_dtl_pro);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        checkPermission();
 
         Intent intent = getIntent();
         store_id = intent.getStringExtra("store_id");
@@ -51,6 +65,7 @@ public class single_food_dtl extends BaseActivity {
         btn_back = findViewById(R.id.btn_back);
 
         txt_veg_nonveg = findViewById(R.id.store_veg_nonveg);
+        txt_distance = findViewById(R.id.store_distance);
         txt_open_close = findViewById(R.id.store_open_close);
         txt_open_close_time = findViewById(R.id.store_open_close_time);
         txt_store_name = findViewById(R.id.store_name);
@@ -72,10 +87,13 @@ public class single_food_dtl extends BaseActivity {
             }
         });
 
+        bind_cart_bottom(true, single_food_dtl.this);
+    }
 
+    public void get_store_data(){
         String userID = sharedPreferences.getString("UserID", "");
         APIClass apiClass = new APIClass();
-        apiClass.get_stores_data(userID, store_id);
+        apiClass.get_stores_data(userID, store_id, String.valueOf(latitude),String.valueOf(longitude));
         apiClass.setOnJSONDataListener(new APIClass.JsonDataInterface() {
             @Override
             public void onSuccess(String message, JSONObject json) {
@@ -85,6 +103,7 @@ public class single_food_dtl extends BaseActivity {
                     txt_open_close.setText(store.getString("open_close"));
                     txt_open_close_time.setText(store.getString("open_close_time"));
                     txt_store_name.setText(store.getString("store_name"));
+                    txt_distance.setText(store.getString("distance"));
                     txt_owner_name.setText(store.getString("owner_name"));
                     txt_store_address.setText(store.getString("store_address"));
                     txt_store_number.setText(store.getString("contact_no"));
@@ -117,9 +136,62 @@ public class single_food_dtl extends BaseActivity {
                 messageToast("ERROR", message);
             }
         });
-
-        bind_cart_bottom(true, single_food_dtl.this);
     }
+
+    public void getCurrentLocation(String call) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            // Use the location object to get the latitude and longitude
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                            if(call.equals("STORE")){
+                                get_store_data();
+                            }
+                        } else {
+                            // Location is null, handle accordingly (e.g., prompt user to enable GPS)
+                            System.out.println("Location : Location is null");
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 3 && grantResults.length > 0){
+            checkPermission();
+        }
+    }
+
+    public void checkPermission(){
+        if(ContextCompat.checkSelfPermission(single_food_dtl.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            //System.out.println("NOT GRANTED");
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                String backAccess = "";
+                if(ContextCompat.checkSelfPermission(single_food_dtl.this, android.Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                    backAccess = android.Manifest.permission.ACCESS_BACKGROUND_LOCATION;
+                ActivityCompat.requestPermissions(single_food_dtl.this, new String[]{backAccess, android.Manifest.permission.ACCESS_FINE_LOCATION}, 3);
+            }else{
+                ActivityCompat.requestPermissions(single_food_dtl.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 3);
+            }
+        }else{
+            getCurrentLocation("STORE");
+        }
+    }
+
     //quantity increase decrease function
     public int change_qty(String type, TextView txt_qty, Button btn_add, ConstraintLayout layout){
         int qty = Integer.valueOf(txt_qty.getText().toString());
@@ -174,91 +246,81 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
             else{
                 Glide.with(activity).load(activity.getDrawable(R.drawable.veg1)).into(holder.txt_veg_non);
             }
-            holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-//                    Intent intent = new Intent(activity, ProductDetail.class);
-//                    try {
-//                        intent.putExtra("product_id", empObject.getString("id"));
-//                    } catch (JSONException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                    activity.startActivity(intent);
-                }
-            });
-
-            CartManager cartManager = new CartManager(activity);
-            int pro_qty = cartManager.getItemQuantity(empObject.getString("id"));
-            if(pro_qty > 0){
-                holder.btn_add.setVisibility(View.INVISIBLE);
-                holder.qty_layout.setVisibility(View.VISIBLE);
-                holder.txt_qty.setText(String.valueOf(pro_qty));
+            if(empObject.getString("product_closed").equals("1")){
+                holder.btn_add.setVisibility(View.GONE);
+                holder.qty_layout.setVisibility(View.GONE);
             }
             else{
-                holder.btn_add.setVisibility(View.VISIBLE);
-                holder.qty_layout.setVisibility(View.INVISIBLE);
-                holder.txt_qty.setText("0");
-            }
-
-            holder.btn_add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+                CartManager cartManager = new CartManager(activity);
+                int pro_qty = cartManager.getItemQuantity(empObject.getString("id"));
+                if(pro_qty > 0){
                     holder.btn_add.setVisibility(View.INVISIBLE);
                     holder.qty_layout.setVisibility(View.VISIBLE);
-                    holder.txt_qty.setText("1");
-
-                    try {
-
-                        double total = Double.valueOf(empObject.getString("fprice")) * 1;
-                        CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), 1, empObject.getString("image_url"), total, empObject.getString("ftype"));
-                        cartManager.addItem(newItem);
-
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    ((single_food_dtl) activity).bind_cart_bottom(true, activity);
+                    holder.txt_qty.setText(String.valueOf(pro_qty));
                 }
-            });
-
-            holder.btn_minus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int qty = ((single_food_dtl) activity).change_qty("DEC", holder.txt_qty, holder.btn_add, holder.qty_layout);
-
-                    try {
-                        CartManager cartManager = new CartManager(activity);
-                        if(qty > 0) {
-                            cartManager.removeItem(empObject.getString("id"));
-                            double total = Double.valueOf(empObject.getString("fprice")) * qty;
-                            CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
-                            cartManager.addItem(newItem);
-                        }
-                        else{
-                            cartManager.removeItem(empObject.getString("id"));
-                        }
-                        System.out.println(cartManager.getCart());
-                        System.out.println(cartManager.getItemQuantity(empObject.getString("id")));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    ((single_food_dtl) activity).bind_cart_bottom(true, activity);
+                else{
+                    holder.btn_add.setVisibility(View.VISIBLE);
+                    holder.qty_layout.setVisibility(View.INVISIBLE);
+                    holder.txt_qty.setText("0");
                 }
-            });
 
-            holder.btn_plus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int qty = ((single_food_dtl) activity).change_qty("INC", holder.txt_qty, holder.btn_add, holder.qty_layout);
-                    try {
-                        CartManager cartManager = new CartManager(activity);
-                        if(qty > 0) {
-                            cartManager.removeItem(empObject.getString("id"));
-                            double total = Double.valueOf(empObject.getString("fprice")) * qty;
-                            CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
+                holder.btn_add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        holder.btn_add.setVisibility(View.INVISIBLE);
+                        holder.qty_layout.setVisibility(View.VISIBLE);
+                        holder.txt_qty.setText("1");
+
+                        try {
+
+                            double total = Double.valueOf(empObject.getString("fprice")) * 1;
+                            CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), 1, empObject.getString("image_url"), total, empObject.getString("ftype"));
                             cartManager.addItem(newItem);
+
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        ((single_food_dtl) activity).bind_cart_bottom(true, activity);
+                    }
+                });
+
+                holder.btn_minus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int qty = ((single_food_dtl) activity).change_qty("DEC", holder.txt_qty, holder.btn_add, holder.qty_layout);
+
+                        try {
+                            CartManager cartManager = new CartManager(activity);
+                            if(qty > 0) {
+                                cartManager.removeItem(empObject.getString("id"));
+                                double total = Double.valueOf(empObject.getString("fprice")) * qty;
+                                CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
+                                cartManager.addItem(newItem);
+                            }
+                            else{
+                                cartManager.removeItem(empObject.getString("id"));
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        ((single_food_dtl) activity).bind_cart_bottom(true, activity);
+                    }
+                });
+
+                holder.btn_plus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int qty = ((single_food_dtl) activity).change_qty("INC", holder.txt_qty, holder.btn_add, holder.qty_layout);
+                        try {
+                            CartManager cartManager = new CartManager(activity);
+                            if(qty > 0) {
+                                cartManager.removeItem(empObject.getString("id"));
+                                double total = Double.valueOf(empObject.getString("fprice")) * qty;
+                                CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("store_id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), qty, empObject.getString("image_url"), total, empObject.getString("ftype"));
+                                cartManager.addItem(newItem);
                             /*if(cartManager.product_exist(empObject.getString("id"))){
                                 cartManager.setItemQuantity(empObject.getString("id"), qty);
                             }
@@ -266,19 +328,22 @@ class storeproAdapter extends RecyclerView.Adapter<storeproViewHolder> {
                                 CartItem newItem = new CartItem(empObject.getString("id"), empObject.getString("fname"), Double.valueOf(empObject.getString("fprice")), 1);
                                 cartManager.addItem(newItem);
                             }*/
+                            }
+                            else{
+                                cartManager.removeItem(empObject.getString("id"));
+                            }
+                            System.out.println(cartManager.getCart());
+                            System.out.println(cartManager.getItemQuantity(empObject.getString("id")));
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
                         }
-                        else{
-                            cartManager.removeItem(empObject.getString("id"));
-                        }
-                        System.out.println(cartManager.getCart());
-                        System.out.println(cartManager.getItemQuantity(empObject.getString("id")));
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
 
-                    ((single_food_dtl) activity).bind_cart_bottom(true, activity);
-                }
-            });
+                        ((single_food_dtl) activity).bind_cart_bottom(true, activity);
+                    }
+                });
+            }
+
+
 
         } catch (JSONException e) {
             e.printStackTrace();

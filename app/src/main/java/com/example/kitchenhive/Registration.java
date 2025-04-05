@@ -102,6 +102,10 @@ public class Registration extends BaseActivity {
                     valid = false;
                     errorMessage = "Enter Password";
                 }
+                else if(valid && password.length() < 6){
+                    valid = false;
+                    errorMessage = "Password must be 6 character long";
+                }
 
                 if(valid){
 

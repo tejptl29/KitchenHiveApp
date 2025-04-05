@@ -1,6 +1,7 @@
 package com.example.kitchenhive;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,7 +67,9 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    ImageView btn_logout;
+    Button btn_logout;
+    TextView name_initial,txt_name,txt_email,txt_phone;
+    ImageView chat_bot_btn;
     View view;
 
 
@@ -76,6 +80,11 @@ public class ProfileFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
 
        btn_logout = view.findViewById(R.id.btn_logout);
+       name_initial = view.findViewById(R.id.profile_name_inital);
+       txt_name = view.findViewById(R.id.name_txt);
+       txt_email = view.findViewById(R.id.email_txt);
+       txt_phone = view.findViewById(R.id.phone_txt);
+       chat_bot_btn = view.findViewById(R.id.chat_bot_btn);
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +93,20 @@ public class ProfileFragment extends Fragment {
                 ((MainActivity) mainActivity).doLogout(mainActivity);
             }
         });
+
+        chat_bot_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(((MainActivity) mainActivity), chatbot.class);
+                startActivity(intent);
+            }
+        });
+
+        txt_name.setText(((MainActivity) mainActivity).sharedPreferences.getString("UserName", ""));
+        txt_email.setText(((MainActivity) mainActivity).sharedPreferences.getString("UserEmail", ""));
+        txt_phone.setText("+91 "+((MainActivity) mainActivity).sharedPreferences.getString("UserPhone", ""));
+        String name_initial_str = new Utility().getNameInitials(((MainActivity) mainActivity).sharedPreferences.getString("UserName", ""));
+        name_initial.setText(name_initial_str);
 
         ((MainActivity) mainActivity).bind_cart_bottom(false, mainActivity);
 

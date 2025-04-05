@@ -12,6 +12,9 @@ public class Utility {
     public static final String PREF_NAME = "cart_pref";
     public static final String CART_KEY = "cart_items";
 
+//    public static String generateOrderId(String user_id) {
+//        return "ORDER_" + System.currentTimeMillis();
+//    }
 
     public boolean checkIfNotEmptySharedpreference(SharedPreferences sharedPreferences, String name, String type)
     {

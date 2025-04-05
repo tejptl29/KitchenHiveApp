@@ -12,11 +12,12 @@ import java.util.List;
 
 public class CartManager {
 
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences, shared;
     private Gson gson;
 
     public CartManager(Context context) {
-        sharedPreferences = context.getSharedPreferences(new Utility().PREF_NAME, Context.MODE_PRIVATE);
+        shared = context.getSharedPreferences("com.example.service", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(new Utility().PREF_NAME+shared.getString("UserID", ""), Context.MODE_PRIVATE);
         gson = new Gson();
     }
 
