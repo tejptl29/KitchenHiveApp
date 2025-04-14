@@ -12,8 +12,8 @@ public interface API {
 
 //    String BASE_URL = "http://192.168.0.65/product/app100/";
 
-    //String BASE_URL = "http://192.168.0.65:8000/";
-    String BASE_URL = "http://192.168.0.66:8000/";
+    String BASE_URL = "http://192.168.0.65:8000/";
+    //String BASE_URL = "http://192.168.1.103:8000/";
 
     @Headers({
             "Accept: application/json",

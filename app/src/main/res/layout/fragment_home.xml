@@ -166,6 +166,23 @@
 
                             </androidx.recyclerview.widget.RecyclerView>
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/item_recycle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_marginTop="20dp"
+                            android:background="#efeff5"
+                            android:paddingBottom="60dp"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/category_recycle">
+
+                        </androidx.recyclerview.widget.RecyclerView>
+
                         <TextView
                             android:id="@+id/home_no_rec_found"
                             android:visibility="gone"
@@ -181,22 +198,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             android:layout_height="wrap_content"/>
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/item_recycle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:layout_marginTop="20dp"
-                                android:background="#efeff5"
-                                android:paddingBottom="60dp"
-                                android:clipToPadding="false"
-                                android:nestedScrollingEnabled="true"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/category_recycle">
 
-                            </androidx.recyclerview.widget.RecyclerView>
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>

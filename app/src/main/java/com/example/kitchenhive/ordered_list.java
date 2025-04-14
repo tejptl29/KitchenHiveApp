@@ -134,7 +134,7 @@ public class ordered_list extends BaseActivity {
 
         // Set the title and message for the dialog
         builder.setTitle("Cancel Order")
-                .setMessage("Are you sure you want to cancel your order ?")
+                .setMessage("If you cancel your order, We will deduct 10% service charge. \n \nAre you sure you want to cancel your order ? \n ")
 
                 // Set the "Yes" button
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

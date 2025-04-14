@@ -454,6 +454,7 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
                 if(jsonObjects.size() <= 0 && jsonObjectspro.size() <= 0){
                     if(home_no_rec_found != null) {
                         home_no_rec_found.setVisibility(View.VISIBLE);
@@ -478,9 +479,9 @@ public class MainActivity extends BaseActivity implements PaymentResultWithDataL
                 }
 
                 //((MainActivity) mainActivity).messageToast("ERROR", message);
-                System.out.println(message);
                 jsonObjects.clear();
                 jsonObjectspro.clear();
+
                 if(jsonObjects.size() <= 0 && jsonObjectspro.size() <= 0){
                     if(home_no_rec_found != null) {
                         home_no_rec_found.setVisibility(View.VISIBLE);

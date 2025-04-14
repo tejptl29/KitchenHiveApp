@@ -104,7 +104,6 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         name_initial = view.findViewById(R.id.name_inital);
         btn_ai_chatbot = view.findViewById(R.id.ai_chatbot_btn);
 
-
         ((MainActivity) mainActivity).home_no_rec_found = view.findViewById(R.id.home_no_rec_found);
 
         //customer name display
