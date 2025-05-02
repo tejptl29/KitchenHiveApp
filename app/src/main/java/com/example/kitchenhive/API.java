@@ -2,6 +2,7 @@ package com.example.kitchenhive;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
@@ -11,8 +12,8 @@ public interface API {
 
 //    String BASE_URL = "http://192.168.0.65/product/app100/";
 
-    String BASE_URL = "http://192.168.0.65:8000/";
-    //String BASE_URL = "http://192.168.1.100:8000/";
+    //String BASE_URL = "http://192.168.0.65:8000/";
+    String BASE_URL = "http://192.168.209.59:8000/";
 
     @Headers({
             "Accept: application/json",
@@ -20,7 +21,7 @@ public interface API {
     })
     @POST("api/get_data/")
     @FormUrlEncoded
-    Call<ResponseBody> get_dashboard_data(@Field("user_id") String user_id, @Field("veg") String veg);
+    Call<ResponseBody> get_dashboard_data(@Field("user_id") String user_id, @Field("veg") String veg, @Field("latitude") String latitude, @Field("longitude") String longitude);
 
     @Headers({
             "Accept: application/json",
@@ -28,11 +29,31 @@ public interface API {
     })
     @POST("api/get_products/")
     @FormUrlEncoded
-    Call<ResponseBody> get_products(@Field("user_id") String user_id,@Field("search") String search,@Field("cat_id") String cat_id,@Field("veg") String veg);
+    Call<ResponseBody> get_products(@Field("user_id") String user_id,@Field("search") String search,@Field("cat_id") String cat_id,@Field("veg") String veg,@Field("latitude") String latitude, @Field("longitude") String longitude);
 
     @POST("api/get_stores_data/")
     @FormUrlEncoded
-    Call<ResponseBody> get_stores_data(@Field("user_id") String user_id,@Field("store_id") String store_id);
+    Call<ResponseBody> get_stores_data(@Field("user_id") String user_id,@Field("store_id") String store_id,@Field("latitude") String latitude, @Field("longitude") String longitude);
+
+    @POST("api/set_cancel_order/")
+    @FormUrlEncoded
+    Call<ResponseBody> set_cancel_order(@Field("user_id") String user_id,@Field("store_order_item_id") String store_order_item_id);
+
+    @POST("api/set_faq_ques_ans/")
+    @FormUrlEncoded
+    Call<ResponseBody> faq_ques_ans(@Field("user_id") String user_id);
+
+    @POST("api/get_faq_ans/")
+    @FormUrlEncoded
+    Call<ResponseBody> get_faq_ans(@Field("user_id") String user_id,@Field("ques_id") String ques_id);
+
+    @POST("api/chat_message/")
+    @FormUrlEncoded
+    Call<ResponseBody> get_chatbot_ques(@Field("user_id") String user_id,@Field("ques_txt") String ques_txt);
+
+
+    @POST("chat")
+    Call<ChatResponse> sendMessage(@Field("message") String message);
 
     @POST("api/register_user/")
     @FormUrlEncoded
@@ -72,7 +93,7 @@ public interface API {
 
     @POST("api/get_orders/")
     @FormUrlEncoded
-    Call<ResponseBody> get_orders(@Field("user_id") String user_id);
+    Call<ResponseBody> get_orders(@Field("user_id") String user_id,@Field("completed") String completed);
 
     @POST("api/get_user_subscriptions/")
     @FormUrlEncoded

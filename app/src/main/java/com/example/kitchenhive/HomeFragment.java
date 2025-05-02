@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     private String mParam1;
     private String mParam2;
 
-    protected Activity mainActivity;
+    public Activity mainActivity;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     ImageSlider imageSlider;
     EditText txt_search;
     TextView txt_customer_name,name_initial;
-    ImageView btn_search,btn_ordered_list;
+    ImageView btn_search,btn_ordered_list,btn_ai_chatbot;
     View view;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,15 +102,31 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         btn_search = view.findViewById(R.id.btn_search);
         txt_customer_name = view.findViewById(R.id.txt_name);
         name_initial = view.findViewById(R.id.name_inital);
+        btn_ai_chatbot = view.findViewById(R.id.ai_chatbot_btn);
 
         ((MainActivity) mainActivity).home_no_rec_found = view.findViewById(R.id.home_no_rec_found);
 
         //customer name display
-        txt_customer_name.setText(((MainActivity) mainActivity).sharedPreferences.getString("UserName", ""));
+        //txt_customer_name.setText(((MainActivity) mainActivity).sharedPreferences.getString("UserName", ""));
 
         //name initial display
         String name_initial_str = new Utility().getNameInitials(((MainActivity) mainActivity).sharedPreferences.getString("UserName", ""));
         name_initial.setText(name_initial_str);
+
+        name_initial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) mainActivity).replaceFragment(new ProfileFragment(mainActivity));
+            }
+        });
+
+        btn_ai_chatbot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              Intent intent = new Intent(mainActivity, chatbot.class);
+              startActivity(intent);
+            }
+        });
 
         ((MainActivity) mainActivity).non_veg_switch = view.findViewById(R.id.btn_veg);
         boolean veg = true;
@@ -122,10 +138,10 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
 
         ArrayList<SlideModel> slideModels = new ArrayList<>();
         slideModels.add(new SlideModel(R.drawable.img6, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.img2, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.img7, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.img3, ScaleTypes.FIT));
         slideModels.add(new SlideModel(R.drawable.img4, ScaleTypes.FIT));
-        slideModels.add(new SlideModel(R.drawable.img5, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.img2, ScaleTypes.FIT));
 
         imageSlider.setImageList(slideModels,ScaleTypes.FIT);
 
@@ -153,7 +169,8 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
         ((MainActivity) mainActivity). recyclerView.setItemAnimator(new DefaultItemAnimator());
         ((MainActivity) mainActivity). recyclerView.setAdapter(((MainActivity) mainActivity).categoriesAdapter);
 
-        ((MainActivity) mainActivity).call_dashboard_api();
+
+        ((MainActivity) mainActivity).checkPermission(true);
 
         //product item categories
         recyclerViewpro = view.findViewById(R.id.item_recycle);
@@ -191,7 +208,7 @@ public class HomeFragment extends Fragment implements  SwipeRefreshLayout.OnRefr
     public void onRefresh() {
         if(!((MainActivity) mainActivity).swipeRefreshLayout.isRefreshing())
             ((MainActivity) mainActivity).swipeRefreshLayout.setRefreshing(true);
-        ((MainActivity) mainActivity).call_dashboard_api();
+        ((MainActivity) mainActivity).checkPermission(true);
     }
 
 

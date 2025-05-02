@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_order_items_product"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/cart_item"
-    android:layout_margin="10dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_margin="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/con2"
@@ -13,7 +14,6 @@
         android:background="@drawable/btn_qty"
         android:clipToOutline="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,11 +21,11 @@
             android:id="@+id/con_img"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/btn_qty"
             android:elevation="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -48,25 +48,36 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="10dp"
             android:padding="5dp"
             android:src="@drawable/veg1"
             android:text="VEG"
             android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/con_img"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/pro_name"
-            android:layout_width="190dp"
-            android:maxLines="2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="39dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
             android:text="PIZZA"
-            android:textSize="15sp"
+            android:textSize="20sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/pro_veg_non"/>
+
+        <TextView
+            android:id="@+id/store_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="Magic Food"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pro_veg_non"/>
+
 
         <TextView
             android:id="@+id/pro_amt"
@@ -74,10 +85,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
-            android:text="\u20B9"
-            android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/con_img"
-            app:layout_constraintTop_toBottomOf="@+id/pro_veg_non" />
+            android:text="\u20B9 500"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/store_name" />
 
         <TextView
             android:id="@+id/pro_qty"
@@ -86,63 +97,32 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:text="QTY"
-            android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/con_img"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pro_amt" />
 
         <TextView
-            android:id="@+id/total_amt"
+            android:id="@+id/order_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
-            android:text="Total Amt"
-            android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/con_img"
-            app:layout_constraintTop_toBottomOf="@+id/pro_qty" />
+            android:text="Date"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pro_qty"/>
 
-<!--        <Button-->
-<!--            android:id="@+id/btn_remove_cart"-->
-<!--            android:layout_width="70dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_marginEnd="10dp"-->
-<!--            android:layout_marginBottom="20dp"-->
-<!--            android:text="-"-->
-<!--            android:textSize="25sp"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/con_img"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"/>-->
-
-
-        <ImageView
-            android:id="@+id/btn_add_cart"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/add_cart"
-            android:gravity="center"
-            android:layout_marginEnd="42dp"
-            android:padding="0dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/btn_qty"
-            android:layout_width="27dp"
-            android:layout_height="35dp"/>
-
-        <ImageView
-            android:id="@+id/btn_remove_cart"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btn_add_cart"
-            android:src="@drawable/bin"
-            android:gravity="center"
+        <TextView
+            android:id="@+id/order_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="15dp"
-            android:padding="0dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/btn_qty"
-            android:layout_width="25dp"
-            android:layout_height="35dp"/>
+            android:layout_marginTop="5dp"
+            android:text="Status"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/order_date"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
